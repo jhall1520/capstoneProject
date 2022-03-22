@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-public class MainActivity extends AppCompatActivity implements SignInFragment.SListener {
+public class MainActivity extends AppCompatActivity implements SignInFragment.SListener, HomeFragment.HListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,5 +33,38 @@ public class MainActivity extends AppCompatActivity implements SignInFragment.SL
                 .replace(R.id.container, new SupportFragment(), "forgot")
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void goToHomeFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, new HomeFragment(), "home")
+                .commit();
+    }
+
+    @Override
+    public void goToCoralDatabaseFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, new CoralDatabaseFragment(), "database")
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void goToDataEntryFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, new DataEntryFragment(), "entry")
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void goToDataAnalysisFragment() {
+
+    }
+
+    @Override
+    public void logOut() {
+
     }
 }

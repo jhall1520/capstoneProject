@@ -29,7 +29,7 @@ public class SignInFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //TODO: need to check database to see if the credentials are correct
-
+                sListener.goToHomeFragment();
             }
         });
 
@@ -64,5 +64,6 @@ public class SignInFragment extends Fragment {
     public interface SListener {
         void goToForgotPasswordFragment();
         void goToSupportFragment();
+        void goToHomeFragment();
     }
 }

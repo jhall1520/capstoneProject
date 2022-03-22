@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:drawable="@drawable/reef1_image"
+        android:duration="4000"/>
+
+    <item
+        android:drawable="@drawable/reef2_image"
+        android:duration="4000"/>
+
+    <item
+        android:drawable="@drawable/reef3_image"
+        android:duration="4000"/>
+
+</animation-list>

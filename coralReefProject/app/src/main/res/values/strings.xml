@@ -21,4 +21,51 @@
     <string name="subject">Subject:</string>
     <string name="commentsIssues">Comments/Issues</string>
     <string name="submit">Submit</string>
+    <string name="coralReefImages">Coral Reef Images</string>
+    <string name="logout">Logout</string>
+    <string name="newCoralEntry">New Coral Entry</string>
+    <string name="dataAnalysis">Data Analysis</string>
+    <string name="coralReefDatabase">Coral Reef Database</string>
+    <string name="reefName">Reef Name:</string>
+    <string name="reefOfName">Name of Reef</string>
+    <string name="newDataEntry">New Data Entry</string>
+    <string name="coralName">Coral Name:</string>
+    <string name="waveSize">Wave Size:</string>
+    <string name="waterTurbidity">Water\nTurbidity:</string>
+    <string name="twoHundredFifty">250</string>
+    <string name="hundred">100</string>
+    <string name="fifty">50</string>
+    <string name="twentyFive">25</string>
+    <string name="ten">10</string>
+    <string name="salinity">Salinity:</string>
+    <string name="fresh">Fresh</string>
+    <string name="marginal">Marginal</string>
+    <string name="brackish">Brackish</string>
+    <string name="saline">Saline</string>
+    <string name="brine">Brine</string>
+    <string name="waterTemperature">Water\nTemperature:</string>
+    <string name="airTemperature">Air\nTemperature:</string>
+    <string name="cloudCoverage">Cloud\nCoverage:</string>
+    <string name="coordinates">Coordinates:</string>
+    <string name="uploadImages">Upload Images</string>
+    <string name="coralEntries">Coral Entries</string>
+    <string name="user">User:</string>
+    <string name="numOfImages">Number of Images:</string>
+    <string name="enteredBy">Entered By:</string>
+    <string-array name="reefNames">
+        <item>CarysFort Reef</item>
+        <item>Coffins Patch</item>
+        <item>Grecian Rocks</item>
+        <item>Looe Key</item>
+        <item>North Dry Rocks</item>
+        <item>Pickles Reef</item>
+        <item>Sombrero Reef</item>
+    </string-array>
+    <string-array name="coralNames">
+        <item>Staghorn</item>
+        <item>Elkhorn</item>
+    </string-array>
+    <string-array name="waterTemps">
+        <item>F</item>
+    </string-array>
 </resources>
