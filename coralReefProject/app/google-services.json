@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "515573240400",
+    "project_id": "coralreefproject-e94fd",
+    "storage_bucket": "coralreefproject-e94fd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:515573240400:android:cdde7c45c72dac04b33755",
+        "android_client_info": {
+          "package_name": "com.example.coralreefproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "515573240400-tk8ifh2t1qt1n9nb2821s54clun5j30e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDk1flW7Qbn5GO4N0uFaI8gklrfMotqCq8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "515573240400-tk8ifh2t1qt1n9nb2821s54clun5j30e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
