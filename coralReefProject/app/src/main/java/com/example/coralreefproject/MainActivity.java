@@ -47,9 +47,9 @@ public class MainActivity extends AppCompatActivity implements SignInFragment.SL
     }
 
     @Override
-    public void goToHomeFragment(FirebaseUser user) {
+    public void goToHomeFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, HomeFragment.newInstance(user), "home")
+                .replace(R.id.container, new HomeFragment(), "home")
                 .commit();
     }
 
@@ -78,7 +78,9 @@ public class MainActivity extends AppCompatActivity implements SignInFragment.SL
 
     @Override
     public void logOut() {
-
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, new SignInFragment(), "signIn")
+                .commit();
     }
 
     @Override

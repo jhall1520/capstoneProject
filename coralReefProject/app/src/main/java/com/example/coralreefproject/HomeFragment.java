@@ -11,15 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.io.Serializable;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class HomeFragment extends Fragment {
 
     HListener hListener;
@@ -32,29 +28,6 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param user Current Logged in user.
-     * @return A new instance of fragment HomeFragment.
-     */
-    public static HomeFragment newInstance(FirebaseUser user) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_USER, user);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            user = getArguments().getParcelable(ARG_USER);
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,6 +35,7 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
         TextView welcome = view.findViewById(R.id.textViewWelcomeUser);
         String userName = user.getDisplayName();
         if (userName.contains(" ")) {
@@ -93,6 +67,8 @@ public class HomeFragment extends Fragment {
         view.findViewById(R.id.buttonLogout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                mAuth.signOut();
                 hListener.logOut();
             }
         });

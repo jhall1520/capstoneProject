@@ -96,10 +96,12 @@ public class SignInFragment extends Fragment {
                                                         .setDisplayName(name)
                                                         .build();
                                                 user.updateProfile(profileUpdates).addOnCompleteListener(task ->
-                                                        sListener.goToHomeFragment(user));
+                                                        sListener.goToHomeFragment());
                                                 dialog.dismiss();
                                             }
                                         });
+                                    } else {
+                                        sListener.goToHomeFragment();
                                     }
                                 } else {
                                     // If sign in fails, display a message to the user.
@@ -153,6 +155,6 @@ public class SignInFragment extends Fragment {
 
         void goToSupportFragment();
 
-        void goToHomeFragment(FirebaseUser user);
+        void goToHomeFragment();
     }
 }
