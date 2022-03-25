@@ -66,7 +66,7 @@ Not-Finished Features
 ![Log In](https://i.gyazo.com/a9803b03bb690e1139e273775bae61a6.png)
 ![Home](https://i.gyazo.com/375b65374949de942c0d80a466ffd2f0.png)
 ![New Coral Reef Entry](https://i.gyazo.com/1cdeb05d625a997039f604116a4e39fe.png)
-![Coral Reef Database](https://i.gyazo.com/602430410a122ad88a0de600d8c214df.png)
+![Coral Reef Database](https://cdn.discordapp.com/attachments/934149911191097427/956731136741097522/unknown.png)
 
 
 ## Demo
