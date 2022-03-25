@@ -58,6 +58,10 @@
     <string name="phoneNum">Phone Number</string>
     <string name="phoneEx">***-***-****</string>
     <string name="date">Date:</string>
+    <string name="airTemp">Air Temperature:</string>
+    <string name="waterTemp">Water Temperature:</string>
+    <string name="waterTurb">Water Turbidity:</string>
+    <string name="cloudCov">Cloud Coverage:</string>
     <string-array name="reefNames">
         <item>CarysFort Reef</item>
         <item>Coffins Patch</item>

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,6 +54,28 @@ public class ViewDataFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_view_data, container, false);
 
+        TextView reefName = view.findViewById(R.id.textViewShowReef);
+        TextView coralName = view.findViewById(R.id.textViewShowCoral);
+        TextView date = view.findViewById(R.id.textViewDatee);
+        TextView coordinates = view.findViewById(R.id.textViewShowCoord);
+        TextView airTemp = view.findViewById(R.id.textViewShowTemp);
+        TextView waterTemp = view.findViewById(R.id.textViewShowWaterTemp);
+        TextView salinity = view.findViewById(R.id.textViewShowSal);
+        TextView waterTurb = view.findViewById(R.id.textViewShowWaterTurb);
+        TextView cloudCoverage = view.findViewById(R.id.textViewShowCloud);
+        TextView user = view.findViewById(R.id.textViewUser);
+
+        reefName.setText(entry.getReefName());
+        coralName.setText(entry.getCoralName());
+        date.setText(entry.getDate());
+        String coordinatesString = "Lat: " + entry.getLatitude() + " Lon: " + entry.getLongitude();
+        coordinates.setText(coordinatesString);
+        airTemp.setText(entry.getAirTemp() + " F");
+        waterTemp.setText(entry.getWaterTemp() + " F");
+        salinity.setText(entry.getSalinity());
+        waterTurb.setText(entry.getTurbidity());
+        cloudCoverage.setText(entry.getCloudCover() + "%");
+        user.setText(entry.getUserName());
 
         return view;
     }
