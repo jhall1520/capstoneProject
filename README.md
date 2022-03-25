@@ -36,6 +36,13 @@ To emulate application:
 - At the top layout bar or next to your Pixel 4 virtual device, click the green play button to launch emulation.
 - If you choose to enlarge the emulation, minimize the "Device Manager" window.
 
+Logging in:
+
+Because only authorized users are able to access you can use this dummy account.
+```bash
+Email: user@gmail.com
+Password: uncc123
+```
 
 ## APIs Used
 
@@ -71,7 +78,7 @@ Insert link to demo
 
 - [@Joel Hall](https://www.github.com/jhall1520)
 - [@Laurenz Luke Gonzales](https://www.github.com/lgonza32)
-- [@Zachery Ieremciuc](https://www.github.com/<>)
+- [@Zachery Ieremciuc](https://www.github.com/zachieremciuc)
 - [@Mehk Heath](https://www.github.com/<>)
 - [@Spencer Jackson](https://www.github.com/<>)
 - [@Shon Johnson](https://www.github.com/<>)
