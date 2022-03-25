@@ -9,9 +9,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity implements SignInFragment.SListener, HomeFragment.HListener, ForgotPasswordFragment.FListener {
+public class MainActivity extends AppCompatActivity implements SignInFragment.SListener, HomeFragment.HListener,
+        ForgotPasswordFragment.FListener, CoralDatabaseFragment.EntryAdapter.CListener {
 
     @SuppressLint("ResourceType")
     @Override
@@ -21,13 +23,26 @@ public class MainActivity extends AppCompatActivity implements SignInFragment.SL
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(getString(R.color.blue))));
         getSupportActionBar().hide();
 
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, new SignInFragment(), "signin")
-                .commit();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if (user != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, new HomeFragment(), "home")
+                    .commit();
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, new SignInFragment(), "signIn")
+                    .commit();
+        }
     }
 
     public void hideSupportActionBar() {
         getSupportActionBar().hide();
+    }
+
+    public void showSupportActionBar() {
+        getSupportActionBar().show();
     }
 
     @Override
@@ -86,5 +101,13 @@ public class MainActivity extends AppCompatActivity implements SignInFragment.SL
     @Override
     public void gotToSignInFromForgotPassword() {
         getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void goToViewDataFragment(CoralEntry entry) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, ViewDataFragment.newInstance(entry), "view")
+                .addToBackStack(null)
+                .commit();
     }
 }

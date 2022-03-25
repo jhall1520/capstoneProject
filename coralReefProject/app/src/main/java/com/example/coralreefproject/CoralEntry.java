@@ -1,6 +1,8 @@
 package com.example.coralreefproject;
 
-public class CoralEntry {
+import java.io.Serializable;
+
+public class CoralEntry implements Serializable {
 
     String reefName;
     String coralName;
@@ -13,9 +15,12 @@ public class CoralEntry {
     String turbidity;
     String userName;
     String[] images;
+    String documentId;
+    String date;
 
     public CoralEntry(String reefName, String coralName, String latitude, String longitude, String airTemp,
-                      String waterTemp, String salinity, String cloudCover, String turbidity, String userName, String[] images) {
+                      String waterTemp, String salinity, String cloudCover, String turbidity, String userName,
+                      String[] images, String documentId, String date) {
         this.reefName = reefName;
         this.coralName = coralName;
         this.latitude = latitude;
@@ -27,6 +32,8 @@ public class CoralEntry {
         this.turbidity = turbidity;
         this.userName = userName;
         this.images = images;
+        this.documentId = documentId;
+        this.date = date;
     }
 
     public String getReefName() {
@@ -115,5 +122,21 @@ public class CoralEntry {
 
     public void setImages(String[] images) {
         this.images = images;
+    }
+
+    public String getDocumentId() {
+        return documentId;
+    }
+
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

@@ -57,6 +57,7 @@
     <string name="phoneNumber">Phone Number:</string>
     <string name="phoneNum">Phone Number</string>
     <string name="phoneEx">***-***-****</string>
+    <string name="date">Date:</string>
     <string-array name="reefNames">
         <item>CarysFort Reef</item>
         <item>Coffins Patch</item>
