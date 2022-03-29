@@ -13,15 +13,17 @@ public class CoralEntry implements Serializable {
     String salinity;
     String cloudCover;
     String turbidity;
-    String humidity;
     String userName;
+    String humidity;
     String windSpeed;
     String windDirection;
+    String waveHeight;
     String[] images;
     String documentId;
     String date;
 
     public CoralEntry() {}
+
     public CoralEntry(String reefName, String coralName, String latitude, String longitude, String airTemp,
                       String waterTemp, String salinity, String cloudCover, String turbidity, String userName,
                       String[] images, String documentId, String date) {
@@ -145,14 +147,6 @@ public class CoralEntry implements Serializable {
         this.date = date;
     }
 
-    public String getHumidity() {
-        return humidity;
-    }
-
-    public void setHumidity(String humidity) {
-        this.humidity = humidity;
-    }
-
     public String getWindSpeed() {
         return windSpeed;
     }
@@ -167,5 +161,21 @@ public class CoralEntry implements Serializable {
 
     public void setWindDirection(String windDirection) {
         this.windDirection = windDirection;
+    }
+
+    public String getWaveHeight() {
+        return waveHeight;
+    }
+
+    public void setWaveHeight(String waveHeight) {
+        this.waveHeight = waveHeight;
+    }
+
+    public String getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(String humidity) {
+        this.humidity = humidity;
     }
 }

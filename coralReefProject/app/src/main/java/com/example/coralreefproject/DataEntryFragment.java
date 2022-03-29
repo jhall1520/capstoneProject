@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -53,6 +54,19 @@ public class DataEntryFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_data_entry, container, false);
+
+        TextView waterTemp = view.findViewById(R.id.textViewShowWaterTemperature);
+        TextView airTemp = view.findViewById(R.id.textViewShowAirTemp);
+        TextView humidity = view.findViewById(R.id.textViewShowHumidity);
+        TextView salinity = view.findViewById(R.id.textViewShowSalinity);
+        TextView cloudCover = view.findViewById(R.id.textViewShowCloudCoverage);
+        TextView windSpeed = view.findViewById(R.id.textViewShowWS);
+        TextView windDirection = view.findViewById(R.id.textViewShowWD);
+        TextView waveHeight = view.findViewById(R.id.textViewShowWaveHeight);
+        TextView coordinates = view.findViewById(R.id.textViewShowCoordinates);
+
+
+
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime now = LocalDateTime.now();
         String date = dtf.format(now);
@@ -65,11 +79,11 @@ public class DataEntryFragment extends Fragment {
         //t_sea_sfc:F
         // salinity was returning -666
         //salinity:psu
-        String params = "t_2m:F,relative_humidity_2m:p,medium_cloud_cover:p," +
-                "wind_speed_2m:mph,wind_dir_2m:d";
+        String params = "t_2m:F,t_sea_sfc:F,relative_humidity_2m:p,medium_cloud_cover:p," +
+                "wind_speed_2m:mph,wind_dir_2m:d,salinity:psu,significant_wave_height:m";
         client = new OkHttpClient();
         String url = "https://api.meteomatics.com/" +
-                validTime + "/" + params + "/52.520551,13.461804/json";
+                validTime + "/" + params + "/25.2175,-80.214722/json";
         Base64.Encoder encoder = Base64.getEncoder();
         Request request = new Request.Builder()
                 .url(url)
@@ -113,21 +127,56 @@ public class DataEntryFragment extends Fragment {
 
                             switch (i) {
                                 case 0:
-                                    coralEntry.setAirTemp(value);
+                                    coralEntry.setAirTemp(value + " F");
                                     break;
                                 case 1:
-                                    coralEntry.setHumidity(value);
+                                    if (value.equals("-666")) {
+                                        coralEntry.setWaterTemp("N/A");
+                                    } else {
+                                        coralEntry.setWaterTemp(value + " F");
+                                    }
                                     break;
                                 case 2:
-                                    coralEntry.setCloudCover(value);
+                                    coralEntry.setHumidity(value + "%");
                                     break;
                                 case 3:
-                                    coralEntry.setWindSpeed(value);
+                                    coralEntry.setCloudCover(value + "%");
                                     break;
                                 case 4:
-                                    coralEntry.setWindDirection(value);
+                                    coralEntry.setWindSpeed(value + " mph");
+                                    break;
+                                case 5:
+                                    coralEntry.setWindDirection(value + " degrees");
+                                    break;
+                                case 6:
+                                    if (value.equals("-666")) {
+                                        coralEntry.setSalinity("N/A");
+                                    } else {
+                                        coralEntry.setSalinity(value + " psu");
+                                    }
+                                    break;
+                                case 7:
+                                    if (value.equals("-666")) {
+                                        coralEntry.setWaveHeight("N/A");
+                                    } else {
+                                        coralEntry.setWaveHeight(value + " m");
+                                    }
                             }
                         }
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                waterTemp.setText(coralEntry.getWaterTemp());
+                                airTemp.setText(coralEntry.getAirTemp());
+                                humidity.setText(coralEntry.getHumidity());
+                                cloudCover.setText(coralEntry.getCloudCover());
+                                salinity.setText(coralEntry.getSalinity());
+                                windDirection.setText(coralEntry.getWindDirection());
+                                windSpeed.setText(coralEntry.getWindSpeed());
+                                waveHeight.setText(coralEntry.getWaveHeight());
+                            }
+                        });
 
 
 
