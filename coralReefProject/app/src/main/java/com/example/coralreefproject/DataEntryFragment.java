@@ -1,8 +1,8 @@
 package com.example.coralreefproject;
 
 import android.app.AlertDialog;
+
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -41,11 +41,29 @@ import okhttp3.Response;
 
 public class DataEntryFragment extends Fragment {
 
+    private static final String ARG_LOCATION = "location";
+
     private OkHttpClient client;
-    private LocationManager locationManager;
+    private Location location;
 
     public DataEntryFragment() {
         // Required empty public constructor
+    }
+
+    public static DataEntryFragment newInstance(Location location) {
+        DataEntryFragment fragment = new DataEntryFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_LOCATION, location);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            location = (Location) getArguments().getParcelable(ARG_LOCATION);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -55,6 +73,7 @@ public class DataEntryFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_data_entry, container, false);
 
+        // textView on the screen that will change when data is received
         TextView waterTemp = view.findViewById(R.id.textViewShowWaterTemperature);
         TextView airTemp = view.findViewById(R.id.textViewShowAirTemp);
         TextView humidity = view.findViewById(R.id.textViewShowHumidity);
@@ -66,7 +85,11 @@ public class DataEntryFragment extends Fragment {
         TextView coordinates = view.findViewById(R.id.textViewShowCoordinates);
 
 
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        float accuracy = location.getAccuracy();
 
+        // Grabbing date and time in the correct format for API request
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime now = LocalDateTime.now();
         String date = dtf.format(now);
@@ -74,25 +97,28 @@ public class DataEntryFragment extends Fragment {
         String time = dtf.format(now);
         String validTime = date + "T" + time + "Z";
 
-        // air temp, humidity, cloud coverage, wind speed, wind direction
-        // water temp was returning -666
-        //t_sea_sfc:F
-        // salinity was returning -666
-        //salinity:psu
+        // air temp, water temp, humidity, cloud coverage, wind speed, wind direction, salinity
         String params = "t_2m:F,t_sea_sfc:F,relative_humidity_2m:p,medium_cloud_cover:p," +
                 "wind_speed_2m:mph,wind_dir_2m:d,salinity:psu,significant_wave_height:m";
         client = new OkHttpClient();
+        // url call
+        // For testing over water:
+        // lat = 25.2175
+        // lon = -80.214722
         String url = "https://api.meteomatics.com/" +
-                validTime + "/" + params + "/25.2175,-80.214722/json";
+                validTime + "/" + params + "/" + latitude + "," + longitude + "/json";
+        // encodes username and password for authentication
         Base64.Encoder encoder = Base64.getEncoder();
+        // creates a request to API
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader("Authorization", "Basic " + encoder.encodeToString("univeristyofnorthcarolinaatcharlotte_hall:Co1AMR4mp3".getBytes()))
                 .build();
-
+        // call the request and puts the work in a new thread
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                // if request fails, let user know
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -109,14 +135,19 @@ public class DataEntryFragment extends Fragment {
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful()) {
                     try {
+                        // parse json data
                         JSONObject jsonObject = new JSONObject(response.body().string());
                         JSONArray jsonArray = jsonObject.getJSONArray("data");
 
+                        // Get the current signed in user
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         CoralEntry coralEntry = new CoralEntry();
                         coralEntry.setUserName(user.getDisplayName());
                         coralEntry.setDate(date + " " + time);
+                        coralEntry.setLatitude(String.format("%.2f", latitude));
+                        coralEntry.setLongitude(String.format("%.2f", longitude));
 
+                        // parse data further
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject curObject = jsonArray.getJSONObject(i);
                             JSONArray param = curObject.getJSONArray("coordinates");
@@ -125,6 +156,7 @@ public class DataEntryFragment extends Fragment {
                             JSONObject valueObj = dates.getJSONObject(0);
                             String value = valueObj.getString("value");
 
+                            // set values in object
                             switch (i) {
                                 case 0:
                                     coralEntry.setAirTemp(value + " F");
@@ -146,7 +178,7 @@ public class DataEntryFragment extends Fragment {
                                     coralEntry.setWindSpeed(value + " mph");
                                     break;
                                 case 5:
-                                    coralEntry.setWindDirection(value + " degrees");
+                                    coralEntry.setWindDirection(value + "\ndegrees");
                                     break;
                                 case 6:
                                     if (value.equals("-666")) {
@@ -164,6 +196,7 @@ public class DataEntryFragment extends Fragment {
                             }
                         }
 
+                        // update textViews on the main thread
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -175,6 +208,8 @@ public class DataEntryFragment extends Fragment {
                                 windDirection.setText(coralEntry.getWindDirection());
                                 windSpeed.setText(coralEntry.getWindSpeed());
                                 waveHeight.setText(coralEntry.getWaveHeight());
+                                coordinates.setText("Lat: " + coralEntry.getLatitude() +
+                                        "\nLon: " + coralEntry.getLongitude());
                             }
                         });
 
