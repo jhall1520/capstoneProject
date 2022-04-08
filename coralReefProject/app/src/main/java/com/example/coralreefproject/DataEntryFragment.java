@@ -73,6 +73,7 @@ public class DataEntryFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_data_entry, container, false);
 
+        client = new OkHttpClient();
         // textView on the screen that will change when data is received
         TextView waterTemp = view.findViewById(R.id.textViewShowWaterTemperature);
         TextView airTemp = view.findViewById(R.id.textViewShowAirTemp);
@@ -89,140 +90,170 @@ public class DataEntryFragment extends Fragment {
         double longitude = location.getLongitude();
         float accuracy = location.getAccuracy();
 
-        // Grabbing date and time in the correct format for API request
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDateTime now = LocalDateTime.now();
-        String date = dtf.format(now);
-        dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
-        String time = dtf.format(now);
-        String validTime = date + "T" + time + "Z";
 
-        // air temp, water temp, humidity, cloud coverage, wind speed, wind direction, salinity
-        String params = "t_2m:F,t_sea_sfc:F,relative_humidity_2m:p,medium_cloud_cover:p," +
-                "wind_speed_2m:mph,wind_dir_2m:d,salinity:psu,significant_wave_height:m";
-        client = new OkHttpClient();
-        // url call
-        // For testing over water:
-        // lat = 25.2175
-        // lon = -80.214722
-        String url = "https://api.meteomatics.com/" +
-                validTime + "/" + params + "/" + latitude + "," + longitude + "/json";
-        // encodes username and password for authentication
-        Base64.Encoder encoder = Base64.getEncoder();
-        // creates a request to API
-        Request request = new Request.Builder()
-                .url(url)
-                .addHeader("Authorization", "Basic " + encoder.encodeToString("univeristyofnorthcarolinaatcharlotte_hall:Co1AMR4mp3".getBytes()))
+        Request request1 = new Request.Builder()
+                .url("https://api.openweathermap.org/data/2.5/weather?lat=" + latitude +
+                        "&lon=" + longitude + "&units=imperial&appid=32ee5fcb98111e23101d37faee480ad4")
                 .build();
-        // call the request and puts the work in a new thread
-        client.newCall(request).enqueue(new Callback() {
+
+        CoralEntry coralEntry = new CoralEntry();
+
+        client.newCall(request1).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                // if request fails, let user know
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
-                                .setTitle("Error")
-                                .setMessage(e.getMessage())
-                                .setPositiveButton(android.R.string.ok, null)
-                                .show();
-                    }
-                });
+
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    try {
-                        // parse json data
-                        JSONObject jsonObject = new JSONObject(response.body().string());
-                        JSONArray jsonArray = jsonObject.getJSONArray("data");
 
-                        // Get the current signed in user
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        CoralEntry coralEntry = new CoralEntry();
-                        coralEntry.setUserName(user.getDisplayName());
-                        coralEntry.setDate(date + " " + time);
-                        coralEntry.setLatitude(String.format("%.2f", latitude));
-                        coralEntry.setLongitude(String.format("%.2f", longitude));
+                try {
+                    JSONObject jsonObject = new JSONObject(response.body().string());
+                    JSONArray weather = jsonObject.getJSONArray("weather");
+                    JSONObject main = jsonObject.getJSONObject("main");
+                    JSONObject wind = jsonObject.getJSONObject("wind");
+                    JSONObject cloud = jsonObject.getJSONObject("clouds");
 
-                        // parse data further
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject curObject = jsonArray.getJSONObject(i);
-                            JSONArray param = curObject.getJSONArray("coordinates");
-                            JSONObject coordinates = param.getJSONObject(0);
-                            JSONArray dates = coordinates.getJSONArray("dates");
-                            JSONObject valueObj = dates.getJSONObject(0);
-                            String value = valueObj.getString("value");
+                    String airTemperature = main.getString("temp");
+                    String windS = wind.getString("speed");
+                    String windDegree = wind.getString("deg");
+                    String cloudiness = cloud.getString("all");
+                    String humid = main.getString("humidity");
 
-                            // set values in object
-                            switch (i) {
-                                case 0:
-                                    coralEntry.setAirTemp(value + " F");
-                                    break;
-                                case 1:
-                                    if (value.equals("-666")) {
-                                        coralEntry.setWaterTemp("N/A");
-                                    } else {
-                                        coralEntry.setWaterTemp(value + " F");
-                                    }
-                                    break;
-                                case 2:
-                                    coralEntry.setHumidity(value + "%");
-                                    break;
-                                case 3:
-                                    coralEntry.setCloudCover(value + "%");
-                                    break;
-                                case 4:
-                                    coralEntry.setWindSpeed(value + " mph");
-                                    break;
-                                case 5:
-                                    coralEntry.setWindDirection(value + "\ndegrees");
-                                    break;
-                                case 6:
-                                    if (value.equals("-666")) {
-                                        coralEntry.setSalinity("N/A");
-                                    } else {
-                                        coralEntry.setSalinity(value + " psu");
-                                    }
-                                    break;
-                                case 7:
-                                    if (value.equals("-666")) {
-                                        coralEntry.setWaveHeight("N/A");
-                                    } else {
-                                        coralEntry.setWaveHeight(value + " m");
-                                    }
-                            }
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            coralEntry.setAirTemp(airTemperature + " F");
+                            coralEntry.setWindSpeed(windS + " mph");
+                            coralEntry.setWindDirection(windDegree + "\ndegrees");
+                            coralEntry.setCloudCover(cloudiness + "%");
+                            coralEntry.setHumidity(humid + "%");
+                        }
+                    });
+
+
+                    // Grabbing date and time in the correct format for API request
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    LocalDateTime now = LocalDateTime.now();
+                    String date = dtf.format(now);
+                    dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+                    String time = dtf.format(now);
+                    String validTime = date + "T" + time + "Z";
+
+                    // air temp, water temp, humidity, cloud coverage, wind speed, wind direction, salinity
+                    String params = "t_sea_sfc:F,salinity:psu,significant_wave_height:m";
+                    // url call
+                    // For testing over water:
+                    // lat = 25.2175
+                    // lon = -80.214722
+                    String url = "https://api.meteomatics.com/" +
+                            validTime + "/" + params + "/" + latitude + "," + longitude + "/json";
+                    // encodes username and password for authentication
+                    Base64.Encoder encoder = Base64.getEncoder();
+                    // creates a request to API
+                    Request request = new Request.Builder()
+                            .url(url)
+                            .addHeader("Authorization", "Basic " + encoder.encodeToString("univeristyofnorthcarolinaatcharlotte_hall:Co1AMR4mp3".getBytes()))
+                            .build();
+                    // call the request and puts the work in a new thread
+                    client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                            // if request fails, let user know
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                                            .setTitle("Error")
+                                            .setMessage(e.getMessage())
+                                            .setPositiveButton(android.R.string.ok, null)
+                                            .show();
+                                }
+                            });
                         }
 
-                        // update textViews on the main thread
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                waterTemp.setText(coralEntry.getWaterTemp());
-                                airTemp.setText(coralEntry.getAirTemp());
-                                humidity.setText(coralEntry.getHumidity());
-                                cloudCover.setText(coralEntry.getCloudCover());
-                                salinity.setText(coralEntry.getSalinity());
-                                windDirection.setText(coralEntry.getWindDirection());
-                                windSpeed.setText(coralEntry.getWindSpeed());
-                                waveHeight.setText(coralEntry.getWaveHeight());
-                                coordinates.setText("Lat: " + coralEntry.getLatitude() +
-                                        "\nLon: " + coralEntry.getLongitude());
+                        @Override
+                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                            if (response.isSuccessful()) {
+                                try {
+                                    // parse json data
+                                    JSONObject jsonObject = new JSONObject(response.body().string());
+                                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+
+                                    // Get the current signed in user
+                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                    coralEntry.setUserName(user.getDisplayName());
+                                    coralEntry.setDate(date + " " + time);
+                                    coralEntry.setLatitude(String.format("%.2f", latitude));
+                                    coralEntry.setLongitude(String.format("%.2f", longitude));
+
+                                    // parse data further
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject curObject = jsonArray.getJSONObject(i);
+                                        JSONArray param = curObject.getJSONArray("coordinates");
+                                        JSONObject coordinates = param.getJSONObject(0);
+                                        JSONArray dates = coordinates.getJSONArray("dates");
+                                        JSONObject valueObj = dates.getJSONObject(0);
+                                        String value = valueObj.getString("value");
+
+                                        // set values in object
+                                        switch (i) {
+                                            case 0:
+                                                if (value.equals("-666")) {
+                                                    coralEntry.setWaterTemp("N/A");
+                                                } else {
+                                                    coralEntry.setWaterTemp(value + " F");
+                                                }
+                                                break;
+                                            case 1:
+                                                if (value.equals("-666")) {
+                                                    coralEntry.setSalinity("N/A");
+                                                } else {
+                                                    coralEntry.setSalinity(value + " psu");
+                                                }
+                                                break;
+                                            case 2:
+                                                if (value.equals("-666")) {
+                                                    coralEntry.setWaveHeight("N/A");
+                                                } else {
+                                                    coralEntry.setWaveHeight(value + " m");
+                                                }
+                                        }
+                                    }
+
+                                    // update textViews on the main thread
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            waterTemp.setText(coralEntry.getWaterTemp());
+                                            airTemp.setText(coralEntry.getAirTemp());
+                                            humidity.setText(coralEntry.getHumidity());
+                                            cloudCover.setText(coralEntry.getCloudCover());
+                                            salinity.setText(coralEntry.getSalinity());
+                                            windDirection.setText(coralEntry.getWindDirection());
+                                            windSpeed.setText(coralEntry.getWindSpeed());
+                                            waveHeight.setText(coralEntry.getWaveHeight());
+                                            coordinates.setText("Lat: " + coralEntry.getLatitude() +
+                                                    "\nLon: " + coralEntry.getLongitude());
+                                        }
+                                    });
+
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
                             }
-                        });
+                        }
+                    });
 
 
-
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         });
+
 
         return view;
     }
