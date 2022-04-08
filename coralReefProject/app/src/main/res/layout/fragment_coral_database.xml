@@ -8,12 +8,22 @@
     tools:context=".CoralDatabaseFragment" >
 
     <TextView
+        android:id="@+id/textViewBackgroundBlue"
+        android:layout_width="0dp"
+        android:layout_height="69dp"
+        android:background="#0328F3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/textViewCoralEntries"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="8dp"
         android:text="@string/coralEntries"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

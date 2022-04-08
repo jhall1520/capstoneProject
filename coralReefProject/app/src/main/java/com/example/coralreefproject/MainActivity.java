@@ -33,11 +33,16 @@ public class MainActivity extends AppCompatActivity implements SignInFragment.SL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(getString(R.color.blue))));
+//        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(getString(R.color.blue))));
+//        getSupportActionBar().setShowHideAnimationEnabled(true);
         getSupportActionBar().hide();
 
         ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
+    }
+
+    public void setTitle(String title) {
+        getSupportActionBar().setTitle(title);
     }
 
     public void hideSupportActionBar() {
@@ -81,8 +86,8 @@ public class MainActivity extends AppCompatActivity implements SignInFragment.SL
 
     @Override
     public void goToDataEntryFragment() {
-        //getSupportActionBar().setTitle("New Data Entry");
-        //getSupportActionBar().show();
+//        getSupportActionBar().setTitle("New Data Entry");
+//        getSupportActionBar().show();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             AlertDialog alertDialog = new AlertDialog.Builder(this)
                     .setTitle("Error")

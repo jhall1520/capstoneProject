@@ -42,7 +42,7 @@ public class ForgotPasswordFragment extends Fragment {
             public void onClick(View view) {
                 String emailString = email.getText().toString();
 
-                if (emailString.equals(" ")) {
+                if (emailString.equals("")) {
                     Toast.makeText(getActivity(), "Enter your email.", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -61,7 +61,8 @@ public class ForgotPasswordFragment extends Fragment {
                                                 }
                                             }).show();
                                 } else {
-                                    Toast.makeText(getActivity(), task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                    String exception = task.getException().toString();
+                                    Toast.makeText(getActivity(), exception.split(": ")[1], Toast.LENGTH_LONG).show();
                                 }
                             }
                         });
