@@ -1,6 +1,10 @@
 package com.example.coralreefproject;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CoralEntry implements Serializable {
 
@@ -12,21 +16,24 @@ public class CoralEntry implements Serializable {
     String waterTemp;
     String salinity;
     String cloudCover;
-    String turbidity;
     String userName;
+    String userId;
     String humidity;
     String windSpeed;
     String windDirection;
     String waveHeight;
-    String[] images;
+    List<String> images;
     String documentId;
     String date;
+    String locationAccuracy;
+    String waterTurbidity;
 
     public CoralEntry() {}
 
     public CoralEntry(String reefName, String coralName, String latitude, String longitude, String airTemp,
                       String waterTemp, String salinity, String cloudCover, String turbidity, String userName,
-                      String[] images, String documentId, String date) {
+                      List<String> images, String documentId, String date, String locationAccuracy, String waveHeight,
+                      String windDirection, String windSpeed, String humidity, String userId) {
         this.reefName = reefName;
         this.coralName = coralName;
         this.latitude = latitude;
@@ -35,10 +42,16 @@ public class CoralEntry implements Serializable {
         this.waterTemp = waterTemp;
         this.salinity = salinity;
         this.cloudCover = cloudCover;
-        this.turbidity = turbidity;
         this.userName = userName;
+        this.userId = userId;
         this.images = images;
         this.documentId = documentId;
+        this.locationAccuracy = locationAccuracy;
+        this.waterTurbidity = turbidity;
+        this.waveHeight = waveHeight;
+        this.humidity = humidity;
+        this.windSpeed = windSpeed;
+        this.windDirection = windDirection;
         this.date = date;
 
     }
@@ -107,14 +120,6 @@ public class CoralEntry implements Serializable {
         this.cloudCover = cloudCover;
     }
 
-    public String getTurbidity() {
-        return turbidity;
-    }
-
-    public void setTurbidity(String turbidity) {
-        this.turbidity = turbidity;
-    }
-
     public String getUserName() {
         return userName;
     }
@@ -123,11 +128,11 @@ public class CoralEntry implements Serializable {
         this.userName = userName;
     }
 
-    public String[] getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(String[] images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 
@@ -177,5 +182,21 @@ public class CoralEntry implements Serializable {
 
     public void setHumidity(String humidity) {
         this.humidity = humidity;
+    }
+
+    public String getLocationAccuracy() {
+        return locationAccuracy;
+    }
+
+    public void setLocationAccuracy(String locationAccuracy) {
+        this.locationAccuracy = locationAccuracy;
+    }
+
+    public String getWaterTurbidity() {
+        return waterTurbidity;
+    }
+
+    public void setWaterTurbidity(String waterTurbidity) {
+        this.waterTurbidity = waterTurbidity;
     }
 }

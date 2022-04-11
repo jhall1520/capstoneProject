@@ -66,6 +66,9 @@
     <string name="humidity">Humidity:</string>
     <string name="windDirection">Wind Direction:</string>
     <string name="windSpeed">Wind Speed:</string>
+    <string name="accuracy">Location\nAccuracy:</string>
+    <string name="image">Image</string>
+    <string name="largeImage">Large Image</string>
     <string-array name="reefNames">
         <item></item>
         <item>CarysFort Reef</item>

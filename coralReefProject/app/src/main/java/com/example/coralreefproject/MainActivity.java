@@ -24,7 +24,8 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SignInFragment.SListener, HomeFragment.HListener,
-        ForgotPasswordFragment.FListener, CoralDatabaseFragment.EntryAdapter.CListener, LocationListener {
+        ForgotPasswordFragment.FListener, CoralDatabaseFragment.EntryAdapter.CListener, LocationListener,
+        DataEntryFragment.DListener {
 
     private LocationManager locationManager;
 
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements SignInFragment.SL
 //        getSupportActionBar().setShowHideAnimationEnabled(true);
         getSupportActionBar().hide();
 
-        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
     }
 
@@ -173,4 +174,14 @@ public class MainActivity extends AppCompatActivity implements SignInFragment.SL
         }
     }
 
+    @Override
+    public void goBackToHomeFragmentFromDataEntry() {
+        getSupportFragmentManager().popBackStack();
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Success")
+                .setMessage("The entry was successfully added!")
+                .setPositiveButton("OK", null)
+                .show();
+    }
 }

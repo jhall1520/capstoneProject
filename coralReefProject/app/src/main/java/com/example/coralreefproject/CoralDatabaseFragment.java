@@ -79,9 +79,17 @@ public class CoralDatabaseFragment extends Fragment {
                     String cloudCov = (String) entryInfo.get("cloudCoverage");
                     String salinity = (String) entryInfo.get("salinity");
                     String waterTurbidity = (String) entryInfo.get("waterTurbidity");
+                    String locationAccuracy = (String) entryInfo.get("locationAccuracy");
+                    ArrayList<String> images = (ArrayList<String>) entryInfo.get("images");
+                    String waveHeight = (String) entryInfo.get("waveHeight");
+                    String windDirection = (String) entryInfo.get("windDirection");
+                    String windSpeed = (String) entryInfo.get("windSpeed");
+                    String humidity = (String) entryInfo.get("humidity");
+                    String userId = (String) entryInfo.get("userId");
 
                     CoralEntry coralEntry = new CoralEntry(reefName, coralName, latitude, longitude, airTemp, waterTemp,
-                            salinity, cloudCov, waterTurbidity, userName, null, documentSnapshot.getId(), date);
+                            salinity, cloudCov, waterTurbidity, userName, images, documentSnapshot.getId(), date, locationAccuracy,
+                            waveHeight, windDirection, windSpeed, humidity, userId);
 
                     entries.add(coralEntry);
                 }
