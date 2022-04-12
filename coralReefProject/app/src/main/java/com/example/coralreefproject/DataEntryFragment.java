@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
@@ -20,6 +21,8 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -32,6 +35,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -47,6 +51,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -104,6 +109,7 @@ public class DataEntryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_data_entry, container, false);
 
         client = new OkHttpClient();
+        imagePathList = new ArrayList<>();
         // textView on the screen that will change when data is received
         TextView waterTemp = view.findViewById(R.id.textViewShowWaterTemperature);
         TextView airTemp = view.findViewById(R.id.textViewShowAirTemp);
@@ -320,10 +326,52 @@ public class DataEntryFragment extends Fragment {
         view.findViewById(R.id.buttonUploadImages).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                startActivityForResult(Intent.createChooser(intent, "Select images"),2);
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+                alertDialog.setTitle("Would you like to take or upload pictures?");
+                View inflatedView = LayoutInflater.from(getContext()).inflate(R.layout.upload_image_layout, (ViewGroup) getView(), false);
+
+                alertDialog.setView(inflatedView);
+                if (imagePathList != null && !imagePathList.isEmpty()) {
+                    alertDialog.setPositiveButton("Clear All Images", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            imagePathList.clear();
+                            AlertDialog dialog1 = new AlertDialog.Builder(getContext())
+                                    .setTitle("Success")
+                                    .setMessage("All uploaded images have been deleted!")
+                                    .setPositiveButton("OK", null)
+                                    .show();
+
+                        }
+                    });
+                }
+                alertDialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+
+                AlertDialog dialog = alertDialog.create();
+                inflatedView.findViewById(R.id.buttonUseCamera).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent takePictures = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(takePictures, 10);
+                        dialog.dismiss();
+                    }
+                });
+
+                inflatedView.findViewById(R.id.buttonUpload).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent uploadImages = new Intent(Intent.ACTION_PICK,
+                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        uploadImages.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                        startActivityForResult(Intent.createChooser(uploadImages, "Select images"), 2);
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
             }
         });
 
@@ -454,13 +502,12 @@ public class DataEntryFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 2 && resultCode == Activity.RESULT_OK  && data != null) {
-
-            imagePathList = new ArrayList<>();
+        // images were uploaded
+        if (requestCode == 2 && resultCode == Activity.RESULT_OK && data != null) {
 
             if (data.getClipData() != null) {
                 int count = data.getClipData().getItemCount();
-                for (int i=0; i<count; i++) {
+                for (int i = 0; i < count; i++) {
                     Uri imageUri = data.getClipData().getItemAt(i).getUri();
                     imagePathList.add(imageUri);
                 }
@@ -469,14 +516,39 @@ public class DataEntryFragment extends Fragment {
                         .setMessage("The images were successfully uploaded!")
                         .setPositiveButton("OK", null)
                         .show();
-            }
-            else if (data.getData() != null) {
+            } else if (data.getData() != null) {
                 Uri imgUri = data.getData();
                 imagePathList.add(imgUri);
                 AlertDialog dialog = new AlertDialog.Builder(getContext())
                         .setTitle("Success")
                         .setMessage("The image was successfully uploaded!")
                         .setPositiveButton("OK", null)
+                        .show();
+            }
+        }
+
+        // images were taken in camera
+        if (requestCode == 10 && resultCode == Activity.RESULT_OK && data != null) {
+
+            if (data.getExtras() != null) {
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 0, bytes);
+                String path = MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), bitmap,
+                        null, null);
+                imagePathList.add(Uri.parse(path));
+                AlertDialog dialog = new AlertDialog.Builder(getContext())
+                        .setTitle("Success")
+                        .setMessage("The image was successfully uploaded!" +
+                                " Would you like to take another?")
+                        .setNegativeButton("No", null)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent takePictures = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                startActivityForResult(takePictures, 10);
+                            }
+                        })
                         .show();
             }
         }

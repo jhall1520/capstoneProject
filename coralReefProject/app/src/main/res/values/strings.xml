@@ -13,7 +13,6 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_home">Title</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="support">Support</string>
     <string name="FORGOTPASSWORD">Forgot Password</string>
@@ -69,6 +68,7 @@
     <string name="accuracy">Location\nAccuracy:</string>
     <string name="image">Image</string>
     <string name="largeImage">Large Image</string>
+    <string name="useCamera">Use Camera</string>
     <string-array name="reefNames">
         <item></item>
         <item>CarysFort Reef</item>
