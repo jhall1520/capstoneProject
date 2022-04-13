@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -96,12 +97,12 @@ public class SignInFragment extends Fragment {
                                                         .setDisplayName(name)
                                                         .build();
                                                 user.updateProfile(profileUpdates).addOnCompleteListener(task ->
-                                                        sListener.goToHomeFragment());
+                                                        sListener.goToHomeFragmentFromSignIn());
                                                 dialog.dismiss();
                                             }
                                         });
                                     } else {
-                                        sListener.goToHomeFragment();
+                                        sListener.goToHomeFragmentFromSignIn();
                                     }
                                 } else {
                                     // If sign in fails, display a message to the user.
@@ -120,14 +121,20 @@ public class SignInFragment extends Fragment {
             }
         });
 
-        view.findViewById(R.id.buttonSupport).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sListener.goToSupportFragment();
-            }
-        });
+//        view.findViewById(R.id.buttonSupport).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                sListener.goToSupportFragment();
+//            }
+//        });
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ((MainActivity) getActivity()).hideSupportActionBar();
     }
 
     @Override
@@ -153,8 +160,8 @@ public class SignInFragment extends Fragment {
     public interface SListener {
         void goToForgotPasswordFragment();
 
-        void goToSupportFragment();
+//        void goToSupportFragment();
 
-        void goToHomeFragment();
+        void goToHomeFragmentFromSignIn();
     }
 }

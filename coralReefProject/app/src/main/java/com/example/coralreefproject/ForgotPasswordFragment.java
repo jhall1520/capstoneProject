@@ -57,7 +57,7 @@ public class ForgotPasswordFragment extends Fragment {
                                             .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                                    fListener.gotToSignInFromForgotPassword();
+                                                    fListener.goToSignInFromForgotPassword();
                                                 }
                                             }).show();
                                 } else {
@@ -84,6 +84,6 @@ public class ForgotPasswordFragment extends Fragment {
     }
 
     public interface FListener {
-        void gotToSignInFromForgotPassword();
+        void goToSignInFromForgotPassword();
     }
 }

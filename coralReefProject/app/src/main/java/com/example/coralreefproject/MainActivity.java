@@ -8,10 +8,12 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.content.Context;
 import android.location.Location;
@@ -28,21 +30,18 @@ public class MainActivity extends AppCompatActivity implements SignInFragment.SL
         DataEntryFragment.DListener {
 
     private LocationManager locationManager;
+    private SharedPreferences sharedPref;
 
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(getString(R.color.blue))));
-//        getSupportActionBar().setShowHideAnimationEnabled(true);
-        getSupportActionBar().hide();
-
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
     }
 
-    public void setTitle(String title) {
+    public void setSupportTitle(String title) {
         getSupportActionBar().setTitle(title);
     }
 
@@ -62,16 +61,21 @@ public class MainActivity extends AppCompatActivity implements SignInFragment.SL
                 .commit();
     }
 
-    @Override
-    public void goToSupportFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, new SupportFragment(), "forgot")
-                .addToBackStack(null)
-                .commit();
-    }
+//    @Override
+//    public void goToSupportFragment() {
+//        getSupportFragmentManager().beginTransaction()
+//                .replace(R.id.container, new SupportFragment(), "forgot")
+//                .addToBackStack(null)
+//                .commit();
+//    }
 
     @Override
-    public void goToHomeFragment() {
+    public void goToHomeFragmentFromSignIn() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("userName", user.getDisplayName());
+        editor.putString("token", user.getUid());
+        editor.apply();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, new HomeFragment(), "home")
                 .commit();
@@ -110,13 +114,17 @@ public class MainActivity extends AppCompatActivity implements SignInFragment.SL
 
     @Override
     public void logOut() {
+        // clears users credentials in local file
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.clear();
+        editor.apply();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, new SignInFragment(), "signIn")
                 .commit();
     }
 
     @Override
-    public void gotToSignInFromForgotPassword() {
+    public void goToSignInFromForgotPassword() {
         getSupportFragmentManager().popBackStack();
     }
 
@@ -126,6 +134,11 @@ public class MainActivity extends AppCompatActivity implements SignInFragment.SL
                 .replace(R.id.container, ViewDataFragment.newInstance(entry), "view")
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void goBackToHomeFragment() {
+        getSupportFragmentManager().popBackStack();
     }
 
     @Override
@@ -151,26 +164,29 @@ public class MainActivity extends AppCompatActivity implements SignInFragment.SL
                     }
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
+                    sharedPref = getPreferences(Context.MODE_PRIVATE);
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
                     FirebaseUser user = mAuth.getCurrentUser();
 
-                    if (user != null) {
+                    // if the user is logged in then their token will be returned
+                    String isLogged = sharedPref.getString("token", "-1");
+
+                    if (!isLogged.equals("-1")) {
+                        // if user is logged in, go to the Home Page
                         getSupportFragmentManager().beginTransaction()
                                 .add(R.id.container, new HomeFragment(), "home")
                                 .commit();
                     } else {
+                        // if the user is not logged in, go to the Sign In page
                         getSupportFragmentManager().beginTransaction()
                                 .add(R.id.container, new SignInFragment(), "signIn")
                                 .commit();
                     }
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+
                 }
                 return;
             }
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
 
@@ -183,5 +199,18 @@ public class MainActivity extends AppCompatActivity implements SignInFragment.SL
                 .setMessage("The entry was successfully added!")
                 .setPositiveButton("OK", null)
                 .show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                getSupportFragmentManager().popBackStack();
+                return true;
+            case R.id.action_logout:
+                logOut();
+                return true;
+        }
+        return true;
     }
 }

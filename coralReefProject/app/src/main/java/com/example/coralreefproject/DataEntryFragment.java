@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -202,16 +204,18 @@ public class DataEntryFragment extends Fragment {
                         @Override
                         public void onFailure(@NonNull Call call, @NonNull IOException e) {
                             // if request fails, let user know
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    AlertDialog alertDialog = new AlertDialog.Builder(getContext())
-                                            .setTitle("Error")
-                                            .setMessage(e.getMessage())
-                                            .setPositiveButton(android.R.string.ok, null)
-                                            .show();
-                                }
-                            });
+                            if (getActivity() != null) {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                                                .setTitle("Error")
+                                                .setMessage(e.getMessage())
+                                                .setPositiveButton(android.R.string.ok, null)
+                                                .show();
+                                    }
+                                });
+                            }
                         }
 
                         @Override
@@ -496,6 +500,16 @@ public class DataEntryFragment extends Fragment {
 
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#0328F3"));
+        ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((MainActivity) getActivity()).getSupportActionBar().setBackgroundDrawable(colorDrawable);
+        ((MainActivity) getActivity()).setSupportTitle("New Data Entry");
+
     }
 
     @Override
