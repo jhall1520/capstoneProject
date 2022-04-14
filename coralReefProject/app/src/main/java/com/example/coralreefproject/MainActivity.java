@@ -109,7 +109,10 @@ public class MainActivity extends AppCompatActivity implements SignInFragment.SL
 
     @Override
     public void goToDataAnalysisFragment() {
-
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, new DataAnalysisFragment(), "analysis")
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override

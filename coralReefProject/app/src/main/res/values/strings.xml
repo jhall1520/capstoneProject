@@ -78,6 +78,19 @@
     <string name="oceanData">Ocean Data</string>
     <string name="images">Images</string>
     <string name="details">Details</string>
+    <string name="selectLocations">Select Locations</string>
+    <string name="craysFort">CarysFort Reef</string>
+    <string name="coffinsPatch">Coffins Patch</string>
+    <string name="grecianRocks">Grecian Rocks</string>
+    <string name="looeKey">Looe Key</string>
+    <string name="northDryRocks">North Dry Rocks</string>
+    <string name="picklesReef">Pickles Reef</string>
+    <string name="sombreroReef">Sombrero Reef</string>
+    <string name="selectCorals">Select Corals</string>
+    <string name="staghorn">Staghorn</string>
+    <string name="elkhorn">Elkhorn</string>
+    <string name="selectAll">Select All</string>
+    <string name="numCoralss">Number Of Corals</string>
     <string-array name="reefNames">
         <item></item>
         <item>CarysFort Reef</item>

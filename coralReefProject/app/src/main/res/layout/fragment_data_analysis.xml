@@ -1,14 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".DataAnalysisFragment">
+    android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/frameLayout7"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:padding="40dp"
+        tools:context=".ViewDataFragment">
 
-</FrameLayout>
+
+        <CheckBox
+            android:id="@+id/checkBoxCraysfort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/craysFort"
+            app:layout_constraintStart_toStartOf="@+id/checkBoxselectAllLoc"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxselectAllLoc" />
+
+        <CheckBox
+            android:id="@+id/checkBoxCoffins"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/coffinsPatch"
+            app:layout_constraintStart_toStartOf="@+id/checkBoxCraysfort"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxCraysfort" />
+
+        <CheckBox
+            android:id="@+id/checkBoxGrecian"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/grecianRocks"
+            app:layout_constraintStart_toStartOf="@+id/checkBoxCoffins"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxCoffins" />
+
+        <CheckBox
+            android:id="@+id/checkBoxLooe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/looeKey"
+            app:layout_constraintStart_toStartOf="@+id/checkBoxGrecian"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxGrecian" />
+
+        <CheckBox
+            android:id="@+id/checkBoxNorthDry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/northDryRocks"
+            app:layout_constraintStart_toStartOf="@+id/checkBoxLooe"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxLooe" />
+
+        <CheckBox
+            android:id="@+id/checkBoxPickles"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/picklesReef"
+            app:layout_constraintStart_toStartOf="@+id/checkBoxNorthDry"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxNorthDry" />
+
+        <CheckBox
+            android:id="@+id/checkBoxSombrero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sombreroReef"
+            app:layout_constraintStart_toStartOf="@+id/checkBoxPickles"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxPickles" />
+
+        <TextView
+            android:id="@+id/textViewSelectLocations"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/selectLocations"
+            android:textColor="@color/blue"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewSelectCorals"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/selectCorals"
+            android:textColor="@color/blue"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <CheckBox
+            android:id="@+id/checkBoxElkhorn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/elkhorn"
+            app:layout_constraintStart_toStartOf="@+id/textViewSelectCorals"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxSelectAllCoral" />
+
+        <CheckBox
+            android:id="@+id/checkBoxStaghorn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/staghorn"
+            app:layout_constraintStart_toStartOf="@+id/checkBoxElkhorn"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxElkhorn" />
+
+        <CheckBox
+            android:id="@+id/checkBoxselectAllLoc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/selectAll"
+            app:layout_constraintStart_toStartOf="@+id/textViewSelectLocations"
+            app:layout_constraintTop_toBottomOf="@+id/textViewSelectLocations"
+            tools:ignore="DuplicateSpeakableTextCheck" />
+
+        <CheckBox
+            android:id="@+id/checkBoxSelectAllCoral"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/selectAll"
+            app:layout_constraintStart_toStartOf="@+id/textViewSelectCorals"
+            app:layout_constraintTop_toBottomOf="@+id/textViewSelectCorals" />
+
+        <com.jjoe64.graphview.GraphView
+            android:id="@+id/numCoralsLineChart"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewNumCoral" />
+
+        <TextView
+            android:id="@+id/textViewNumCoral"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/numCoralss"
+            android:textColor="@color/blue"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxSombrero" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
