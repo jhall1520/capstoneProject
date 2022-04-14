@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -108,7 +109,7 @@ public class HomeFragment extends Fragment {
                 hListener.logOut();
                 return true;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override

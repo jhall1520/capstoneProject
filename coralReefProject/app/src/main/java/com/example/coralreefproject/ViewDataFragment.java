@@ -102,24 +102,36 @@ public class ViewDataFragment extends Fragment {
                             TextView coralName = view.findViewById(R.id.textViewShowCoral);
                             TextView date = view.findViewById(R.id.textViewDatee);
                             TextView coordinates = view.findViewById(R.id.textViewShowCoord);
+                            TextView locationAccuracy = view.findViewById(R.id.textViewShowAccuracy);
                             TextView airTemp = view.findViewById(R.id.textViewShowTemp);
+                            TextView cloudCoverage = view.findViewById(R.id.textViewShowCloud);
+                            TextView humidity = view.findViewById(R.id.textViewShowHumid);
+                            TextView windDirection = view.findViewById(R.id.textViewShowWindDir);
+                            TextView windSpeed = view.findViewById(R.id.textViewShowWindSp);
                             TextView waterTemp = view.findViewById(R.id.textViewShowWaterTemp);
                             TextView salinity = view.findViewById(R.id.textViewShowSal);
                             TextView waterTurb = view.findViewById(R.id.textViewShowWaterTurb);
-                            TextView cloudCoverage = view.findViewById(R.id.textViewShowCloud);
+                            TextView waveHeight = view.findViewById(R.id.textViewShowHeight);
                             TextView user = view.findViewById(R.id.textViewUser);
+                            TextView numCorals = view.findViewById(R.id.textViewShowNumCorals);
 
                             reefName.setText(entry.getReefName());
                             coralName.setText(entry.getCoralName());
-                            date.setText(entry.getDate());
-                            String coordinatesString = "Lat: " + entry.getLatitude() + " Lon: " + entry.getLongitude();
+                            date.setText(entry.getDate() + " " + entry.getTime());
+                            String coordinatesString = entry.getLatitude() + " , " + entry.getLongitude();
                             coordinates.setText(coordinatesString);
+                            locationAccuracy.setText(entry.getLocationAccuracy());
                             airTemp.setText(entry.getAirTemp());
+                            cloudCoverage.setText(entry.getCloudCover());
+                            humidity.setText(entry.getHumidity());
+                            windDirection.setText(entry.getWindDirection());
+                            windSpeed.setText(entry.getWindSpeed());
                             waterTemp.setText(entry.getWaterTemp());
                             salinity.setText(entry.getSalinity());
                             waterTurb.setText(entry.getWaterTurbidity());
-                            cloudCoverage.setText(entry.getCloudCover());
+                            waveHeight.setText(entry.getWaveHeight());
                             user.setText(entry.getUserName());
+                            numCorals.setText(entry.getNumCorals());
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -177,7 +189,6 @@ public class ViewDataFragment extends Fragment {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //TODO: make a layout that when a image is clicked the user can view it on a bigger screen
                         imageView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {

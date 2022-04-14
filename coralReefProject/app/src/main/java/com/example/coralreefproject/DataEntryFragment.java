@@ -1,5 +1,6 @@
 package com.example.coralreefproject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 
@@ -167,9 +168,10 @@ public class DataEntryFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            coralEntry.setAirTemp(airTemperature + " F");
+                            coralEntry.setAirTemp(airTemperature + "\u00B0 F");
                             coralEntry.setWindSpeed(windS + " mph");
-                            coralEntry.setWindDirection(windDegree + "\ndegrees");
+                            //String windDirection = convertDegreeToDirection(windDegree);
+                            coralEntry.setWindDirection(windDegree + "\u00B0");
                             coralEntry.setCloudCover(cloudiness + "%");
                             coralEntry.setHumidity(humid + "%");
                         }
@@ -229,10 +231,14 @@ public class DataEntryFragment extends Fragment {
                                     // Get the current signed in user
                                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                     coralEntry.setUserName(user.getDisplayName());
-                                    coralEntry.setDate(date + " " + time);
-                                    coralEntry.setLatitude(String.format("%.2f", latitude));
-                                    coralEntry.setLongitude(String.format("%.2f", longitude));
-                                    coralEntry.setLocationAccuracy(String.valueOf(accuracy));
+                                    coralEntry.setDate(date);
+                                    coralEntry.setTime(time);
+                                    coralEntry.setNumCorals(String.valueOf(Math.round(Math.random() * 25 + 1)));
+                                    String formattedLat = getDirectionOfLatitude(latitude);
+                                    String formattedLon = getDirectionOfLongitude(longitude);
+                                    coralEntry.setLatitude(formattedLat);
+                                    coralEntry.setLongitude(formattedLon);
+                                    coralEntry.setLocationAccuracy(String.valueOf(accuracy) + " m");
 
                                     // parse data further
                                     for (int i = 0; i < jsonArray.length(); i++) {
@@ -249,7 +255,7 @@ public class DataEntryFragment extends Fragment {
                                                 if (value.equals("-666")) {
                                                     coralEntry.setWaterTemp("N/A");
                                                 } else {
-                                                    coralEntry.setWaterTemp(value + " F");
+                                                    coralEntry.setWaterTemp(value + "\u00B0 F");
                                                 }
                                                 break;
                                             case 1:
@@ -271,6 +277,7 @@ public class DataEntryFragment extends Fragment {
                                     if (getActivity() != null) {
                                         // update textViews on the main thread
                                         getActivity().runOnUiThread(new Runnable() {
+                                            @SuppressLint("SetTextI18n")
                                             @Override
                                             public void run() {
                                                 waterTemp.setText(coralEntry.getWaterTemp());
@@ -281,9 +288,9 @@ public class DataEntryFragment extends Fragment {
                                                 windDirection.setText(coralEntry.getWindDirection());
                                                 windSpeed.setText(coralEntry.getWindSpeed());
                                                 waveHeight.setText(coralEntry.getWaveHeight());
-                                                coordinates.setText("Lat: " + coralEntry.getLatitude() +
-                                                        "\nLon: " + coralEntry.getLongitude());
-                                                locationAccuracy.setText(coralEntry.getLocationAccuracy() + " m");
+                                                coordinates.setText(coralEntry.getLatitude() +
+                                                        "\n" + coralEntry.getLongitude());
+                                                locationAccuracy.setText(coralEntry.getLocationAccuracy());
                                             }
                                         });
                                     }
@@ -306,6 +313,7 @@ public class DataEntryFragment extends Fragment {
 
         RadioGroup radioGroup = view.findViewById(R.id.radioGroupWaterTurb);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @SuppressLint("NonConstantResourceId")
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 switch (i) {
@@ -400,6 +408,10 @@ public class DataEntryFragment extends Fragment {
                     return;
                 }
 
+                if (coralEntry.getWaterTemp().equals("N/A")) {
+                    coralEntry.setWaterTurbidity("N/A");
+                }
+
                 coralEntry.setReefName(reefName.getSelectedItem().toString());
                 coralEntry.setCoralName(coralName.getSelectedItem().toString());
 
@@ -411,7 +423,7 @@ public class DataEntryFragment extends Fragment {
                 // Get a reference to the location where we'll store our photos
                 StorageReference storageRef = storage.getReference("coral_images");
 
-                if (imagePathList != null) {
+                if (imagePathList != null && !imagePathList.isEmpty()) {
                     for (int i = 0; i < imagePathList.size(); i++) {
                         StorageReference photoRef = storageRef.child(imagePathList.get(i).getLastPathSegment());
                         // Upload file to Firebase Storage
@@ -428,6 +440,7 @@ public class DataEntryFragment extends Fragment {
                                         if (count == imagePathList.size() - 1) {
                                             coralEntry.setImages(imagesUrl);
                                             Map<String, Object> data = new HashMap<>();
+                                            assert user != null;
                                             data.put("userName", user.getDisplayName());
                                             data.put("userId", user.getUid());
                                             data.put("airTemp", coralEntry.getAirTemp());
@@ -446,6 +459,8 @@ public class DataEntryFragment extends Fragment {
                                             data.put("windSpeed", coralEntry.getWindSpeed());
                                             data.put("waterTurbidity", coralEntry.getWaterTurbidity());
                                             data.put("images", coralEntry.getImages());
+                                            data.put("time", coralEntry.getTime());
+                                            data.put("numCorals", coralEntry.getNumCorals());
 
                                             db.collection("entries")
                                                     .add(data).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
@@ -485,6 +500,8 @@ public class DataEntryFragment extends Fragment {
                     data.put("windSpeed", coralEntry.getWindSpeed());
                     data.put("waterTurbidity", coralEntry.getWaterTurbidity());
                     data.put("images", coralEntry.getImages());
+                    data.put("time", coralEntry.getTime());
+                    data.put("numCorals", coralEntry.getNumCorals());
 
                     db.collection("entries")
                             .add(data).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
@@ -578,6 +595,52 @@ public class DataEntryFragment extends Fragment {
             throw new IllegalStateException("MainActivity does not implement DListener");
         }
     }
+
+    public String getDirectionOfLatitude(double lat) {
+        String latitude = String.format("%.2f", lat);
+        if (latitude.contains("-")) {
+            latitude = latitude.split("-")[1] + "\u00B0 S";
+
+        } else {
+            latitude = latitude + "\u00B0 N";
+        }
+        return latitude;
+    }
+
+    public String getDirectionOfLongitude(double longit) {
+        String longitude = String.format("%.2f", longit);
+        if (longitude.contains("-")) {
+            longitude = longitude.split("-")[1] + "\u00B0 W";
+
+        } else {
+            longitude = longitude + "\u00B0 E";
+        }
+        return longitude;
+    }
+
+//    public String convertDegreeToDirection(String degree) {
+//        int degrees = Integer.parseInt(degree);
+//        String direction = null;
+//
+//        if (degrees >= 330 || degrees < 30) {
+//            direction = "N";
+//        } else if (30 <= degrees && degrees < 60) {
+//            direction = "NE";
+//        } else if (60 <= degrees && degrees < 120) {
+//            direction = "E";
+//        } else if (120 <= degrees && degrees < 150) {
+//            direction = "SE";
+//        } else if (150 <= degrees && degrees < 210) {
+//            direction = "S";
+//        } else if (210 <= degrees && degrees < 240) {
+//            direction = "SW";
+//        } else if (240 <= degrees && degrees < 300) {
+//            direction = "W";
+//        } else if (300 <= degrees && degrees < 330) {
+//            direction = "NW";
+//        }
+//        return direction;
+//    }
 
     public interface DListener {
         void goBackToHomeFragmentFromDataEntry();

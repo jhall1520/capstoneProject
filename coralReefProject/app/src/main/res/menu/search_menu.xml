@@ -4,11 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
 tools:context=".MainActivity">
 
-<item
-    android:id="@+id/action_search"
-    android:icon="@drawable/ic_baseline_search_24"
-    android:title="Search"
-    app:actionViewClass="android.widget.SearchView"
-    android:iconifiedByDefault="true"
-    app:showAsAction="always"/>
+    <item android:id="@+id/action_dropdown"
+        android:title="DropDown"
+        app:actionViewClass="android.widget.Spinner"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_baseline_search_24"
+        android:title="Search"
+        app:actionViewClass="android.widget.SearchView"
+        android:iconifiedByDefault="true"
+        app:showAsAction="always"/>
 </menu>

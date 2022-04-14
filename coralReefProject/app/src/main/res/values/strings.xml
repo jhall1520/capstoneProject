@@ -69,6 +69,15 @@
     <string name="image">Image</string>
     <string name="largeImage">Large Image</string>
     <string name="useCamera">Use Camera</string>
+    <string name="searchEntries">Search Entries</string>
+    <string name="noResultsFound">No Results Found</string>
+    <string name="locationAccuracy">Location Accuracy:</string>
+    <string name="waterTubidity">Water Turbidity:</string>
+    <string name="numCorals">Number of Corals:</string>
+    <string name="weatherData">Weather Data</string>
+    <string name="oceanData">Ocean Data</string>
+    <string name="images">Images</string>
+    <string name="details">Details</string>
     <string-array name="reefNames">
         <item></item>
         <item>CarysFort Reef</item>
