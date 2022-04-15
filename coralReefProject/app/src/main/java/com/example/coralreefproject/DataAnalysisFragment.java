@@ -1,5 +1,6 @@
 package com.example.coralreefproject;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -20,11 +22,14 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.protobuf.Internal;
+import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.OnDataPointTapListener;
 import com.jjoe64.graphview.series.PointsGraphSeries;
 import com.jjoe64.graphview.series.Series;
 
@@ -51,6 +56,8 @@ public class DataAnalysisFragment extends Fragment {
     CheckBox northDryRocks;
     CheckBox picklesReef;
     CheckBox sombreroReef;
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     ArrayList<CoralEntry> craysFortEntries;
 
@@ -160,9 +167,11 @@ public class DataAnalysisFragment extends Fragment {
                         db.collection("entries")
                                 .whereEqualTo("reefName", craysFort.getText().toString())
                                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @SuppressLint("SimpleDateFormat")
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
+                                    craysFortEntries.clear();
                                     DataPoint[] dataPoints = new DataPoint[task.getResult().size()];
                                     int count = 0;
                                     for (DocumentSnapshot documentSnapshot : task.getResult()) {
@@ -203,24 +212,57 @@ public class DataAnalysisFragment extends Fragment {
                                     for (CoralEntry coralEntry : craysFortEntries) {
                                         Date date = null;
                                         try {
-                                            date = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss").parse(coralEntry.getDate() + " " + coralEntry.getTime());
+                                            date = sdf.parse(coralEntry.getDate());
                                         } catch (ParseException e) {
                                             e.printStackTrace();
                                         }
-                                        dataPoints[count] = new DataPoint(date, Integer.parseInt(coralEntry.getNumCorals()));
+                                        dataPoints[count] = new DataPoint(date.getTime(), Integer.parseInt(coralEntry.getNumCorals()));
                                         count++;
                                     }
                                     LineGraphSeries<DataPoint> series = new LineGraphSeries<>(dataPoints);
                                     series.setTitle(craysFort.getText().toString());
+                                    series.setDrawDataPoints(true);
+                                    series.setDataPointsRadius(10);
+                                    series.setThickness(8);
+
+                                    series.setOnDataPointTapListener(new OnDataPointTapListener() {
+                                        @Override
+                                        public void onTap(Series series, DataPointInterface dataPoint) {
+                                            Toast.makeText(DataAnalysisFragment.this.getActivity(), "Series1: On Data Point clicked: "+ new Date((long)dataPoint.getX()).toString(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                    seriesMap.put(craysFort.getText().toString(), series);
+                                    numCoralsLineChart.getViewport().setYAxisBoundsManual(true);
+                                    numCoralsLineChart.getViewport().setMinY(0);
+                                    numCoralsLineChart.getViewport().setMaxY(30);
+                                    try {
+                                        Date minDate = sdf.parse(craysFortEntries.get(0).getDate());
+                                        Date maxDate = sdf.parse(craysFortEntries.get(craysFortEntries.size()-1).getDate());
+                                        numCoralsLineChart.getViewport().setMinX(minDate.getTime());
+                                        numCoralsLineChart.getViewport().setMaxX(maxDate.getTime());
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    numCoralsLineChart.getViewport().setXAxisBoundsManual(true);
                                     numCoralsLineChart.addSeries(series);
-                                    numCoralsLineChart.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity()));
-                                    numCoralsLineChart.getGridLabelRenderer().setNumHorizontalLabels(3);
+                                    numCoralsLineChart.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+                                        @Override
+                                        public String formatLabel(double value, boolean isValueX) {
+                                            if(isValueX) {
+                                                return sdf.format(new Date((long)value));
+                                            } else
+                                                return super.formatLabel(value, isValueX);
+                                        }
+                                    });
+                                    numCoralsLineChart.getGridLabelRenderer().setNumHorizontalLabels(4);
                                     numCoralsLineChart.getLegendRenderer().setVisible(true);
                                     numCoralsLineChart.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
-                                    numCoralsLineChart.getViewport().setMinX(dataPoints[0].getX());
-                                    numCoralsLineChart.getViewport().setMaxX(dataPoints[dataPoints.length-1].getX());
-                                    numCoralsLineChart.getViewport().setXAxisBoundsManual(true);
+                                    numCoralsLineChart.getGridLabelRenderer().setHorizontalAxisTitle("Dates");
+                                    numCoralsLineChart.getGridLabelRenderer().setVerticalAxisTitle("Num Corals");
+                                    //numCoralsLineChart.getGridLabelRenderer().setHorizontalLabelsAngle(25);
                                     //numCoralsLineChart.getGridLabelRenderer().setHumanRounding(false);
+//                                    numCoralsLineChart.getViewport().setScalable(true);
+//                                    numCoralsLineChart.getViewport().setScalableY(true);
                                 }
                             }
                         });
