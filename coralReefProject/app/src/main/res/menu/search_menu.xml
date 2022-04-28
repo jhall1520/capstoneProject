@@ -6,6 +6,7 @@ tools:context=".MainActivity">
 
     <item android:id="@+id/action_dropdown"
         android:title="DropDown"
+        android:visible="false"
         app:actionViewClass="android.widget.Spinner"
         app:showAsAction="always"
         />

@@ -149,6 +149,21 @@ public class CoralDatabaseFragment extends Fragment {
         dropdown.setAdapter(adapterCat);
 
         searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dropdownItem.setVisible(true);
+            }
+        });
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                dropdownItem.setVisible(false);
+                return false;
+            }
+        });
         //searchView.setQueryHint("Search Entries");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
