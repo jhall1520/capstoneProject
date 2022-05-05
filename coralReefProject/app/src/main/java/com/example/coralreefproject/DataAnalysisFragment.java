@@ -170,7 +170,6 @@ public class DataAnalysisFragment extends Fragment {
                     stagHorn.setChecked(true);
                     elkHorn.setChecked(true);
                 } else {
-                    numCoralsLineChart.removeAllSeries();
                     stagHorn.setChecked(false);
                     elkHorn.setChecked(false);
                 }

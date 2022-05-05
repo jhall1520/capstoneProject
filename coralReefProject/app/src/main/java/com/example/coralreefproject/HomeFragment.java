@@ -43,7 +43,10 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         setHasOptionsMenu(true);
 
+        // get the current user
         user = FirebaseAuth.getInstance().getCurrentUser();
+
+        // Update welcome textView to contain the user's name
         TextView welcome = view.findViewById(R.id.textViewWelcomeUser);
         String userName = user.getDisplayName();
         if (userName.contains(" ")) {
@@ -51,6 +54,7 @@ public class HomeFragment extends Fragment {
         }
         welcome.setText("Welcome " + userName + "!");
 
+        // if user clicks on the New Entry Button go to the New Entry Fragment
         view.findViewById(R.id.buttonNewEntry).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,6 +62,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // if user clicks on the Database button go to the CoralDatabase Fragment
         view.findViewById(R.id.buttonDatabase).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,22 +70,13 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // if user clicks on the DataAnalysis button then go to the DataAnalysis Fragment
         view.findViewById(R.id.buttonDataAnalysis).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 hListener.goToDataAnalysisFragment();
             }
         });
-
-//        view.findViewById(R.id.buttonLogout).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                FirebaseAuth mAuth = FirebaseAuth.getInstance();
-//                mAuth.signOut();
-//                hListener.logOut();
-//            }
-//        });
-
 
         return view;
     }
@@ -89,6 +85,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ((MainActivity) getActivity()).showSupportActionBar();
+        // Update Title in the Support Bar
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#332E2E"));
         ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         ((MainActivity) getActivity()).getSupportActionBar().setBackgroundDrawable(colorDrawable);

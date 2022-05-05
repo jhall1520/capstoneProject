@@ -51,6 +51,9 @@ public class CoralDatabaseFragment extends Fragment {
     ArrayAdapter<String> adapterCat;
     TextView noResults;
 
+    /**
+     * Empty Constructor
+     */
     public CoralDatabaseFragment() {
         // Required empty public constructor
     }
@@ -60,12 +63,17 @@ public class CoralDatabaseFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_coral_database, container, false);
+        // This is the adapter that holds the category values that a user can select to query through
+        // the database
         adapterCat = new ArrayAdapter<String>(getActivity(), R.layout.dropdown_layout, categories);
         setHasOptionsMenu(true);
 
         entries = new ArrayList<>();
+        // get all data that is currently in the database
         getData();
 
+        // initializes the recyclerView to hold all cardView of each data entry that is retrieved
+        // from the database
         recyclerView = view.findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(getActivity());
         cListener = (EntryAdapter.CListener) ((MainActivity) getActivity());
@@ -77,15 +85,22 @@ public class CoralDatabaseFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Gets All entries in the database and stores them in the entries ArrayList
+     */
     public void getData() {
+        // Get the Database instance
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        // Query for all entries
         db.collection("entries").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                // Each document snapshot holds all the information for one Coral Entry object
                 for (QueryDocumentSnapshot documentSnapshot : value) {
                     Map<String, Object> entryInfo = documentSnapshot.getData();
+                    // Get All information for the coral entry
                     String userName = (String) entryInfo.get("userName");
                     String date = (String) entryInfo.get("date");
                     String reefName = (String) entryInfo.get("reefName");
@@ -107,14 +122,18 @@ public class CoralDatabaseFragment extends Fragment {
                     String time = (String) entryInfo.get("time");
                     String numCorals = (String) entryInfo.get("numCorals");
 
+                    // create coralEntry object
                     CoralEntry coralEntry = new CoralEntry(reefName, coralName, latitude, longitude, airTemp, waterTemp,
                             salinity, cloudCov, waterTurbidity, userName, images, documentSnapshot.getId(), date, locationAccuracy,
                             waveHeight, windDirection, windSpeed, humidity, userId, time, numCorals);
 
+                    // if entries does not contain the coralEntry
                     if (!entries.contains(coralEntry)) {
+                        // add the coral Entry to the list
                         entries.add(coralEntry);
                     }
                 }
+                // sort the entries by date and time in ascending order
                 Collections.sort(entries, new Comparator<CoralEntry>() {
                     @Override
                     public int compare(CoralEntry entry1, CoralEntry entry2) {
@@ -123,6 +142,8 @@ public class CoralDatabaseFragment extends Fragment {
                         return (-1) * date1.compareTo(date2);
                     }
                 });
+                // let the adapter know that the information in entries has been updated so the
+                // changes can be shown in the recyclerview
                 adapter.notifyDataSetChanged();
             }
         });
@@ -130,6 +151,7 @@ public class CoralDatabaseFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Sets up the Title Bar at the top of the screen
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#0328F3"));
         ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((MainActivity) getActivity()).getSupportActionBar().setBackgroundDrawable(colorDrawable);
@@ -139,17 +161,21 @@ public class CoralDatabaseFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        // Create the search icon on the top right of screen
         inflater.inflate(R.menu.search_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+        // Initializes the searchItem and dropdownItem
         MenuItem searchItem = menu.findItem(R.id.action_search);
         MenuItem dropdownItem = menu.findItem(R.id.action_dropdown);
         Spinner dropdown = (Spinner) dropdownItem.getActionView();
+        // Sets the layout for the contents in the dropdown
         dropdown.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         dropdown.setGravity(Gravity.CENTER);
         dropdown.setAdapter(adapterCat);
 
         searchView = (SearchView) searchItem.getActionView();
 
+        // Shows the full search bar and dropdown menu when the icon is clicked
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -157,6 +183,7 @@ public class CoralDatabaseFragment extends Fragment {
             }
         });
 
+        // hides the full search bar and dropdown menu when the search bar is closed
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
@@ -164,11 +191,13 @@ public class CoralDatabaseFragment extends Fragment {
                 return false;
             }
         });
-        //searchView.setQueryHint("Search Entries");
+
+        // When the user submits (presses Enter) a  query will be made
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 String category = null;
+                // finds out which dropdown item is selected
                 switch (dropdown.getSelectedItem().toString()) {
                     case "Reef Name":
                         category = "reefName";
@@ -183,20 +212,26 @@ public class CoralDatabaseFragment extends Fragment {
                         category = "date";
                         break;
                 }
+                // gets database instance
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 if (category != null) {
+                    // makes query for all entries with category(field) equal to the users search
                     db.collection("entries")
                             .whereEqualTo(category, s)
                             .get()
                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @SuppressLint("NotifyDataSetChanged")
                                 @Override
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                     entries.clear();
                                     if (task.isSuccessful()) {
+                                        // if no results were found show the noResults textView
                                         if (task.getResult().size() == 0) {
                                             noResults.setVisibility(View.VISIBLE);
                                         } else {
+                                            // hid the noResults textView
                                             noResults.setVisibility(View.INVISIBLE);
+                                            // add all entries found to the entries arrayList
                                             for (QueryDocumentSnapshot document : task.getResult()) {
                                                 Map<String, Object> data = document.getData();
                                                 CoralEntry entry = new CoralEntry();
@@ -226,6 +261,7 @@ public class CoralDatabaseFragment extends Fragment {
                                                 }
                                             }
                                         }
+                                        // sort the entries by date and time
                                         Collections.sort(entries, new Comparator<CoralEntry>() {
                                             @Override
                                             public int compare(CoralEntry entry1, CoralEntry entry2) {
@@ -234,8 +270,10 @@ public class CoralDatabaseFragment extends Fragment {
                                                 return (-1) *date1.compareTo(date2);
                                             }
                                         });
+                                        // update the recyclerView with the new entries
                                         adapter.notifyDataSetChanged();
                                     } else {
+                                        // display error if the query was not successful
                                         AlertDialog dialog = new AlertDialog.Builder(getContext())
                                                 .setTitle("Error")
                                                 .setMessage(task.getException().getMessage())
@@ -259,6 +297,7 @@ public class CoralDatabaseFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
+        // handles the search icon being clicked
         switch (item.getItemId()) {
             case R.id.action_search:
                 return true;
@@ -266,6 +305,9 @@ public class CoralDatabaseFragment extends Fragment {
         return true;
     }
 
+    /**
+     * This class will extend the Adapter class so a custom layout can be made
+     */
     static class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.CoralEntryViewHolder> {
         ArrayList<CoralEntry> entries;
         CListener cListener;
@@ -284,6 +326,7 @@ public class CoralDatabaseFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull CoralEntryViewHolder holder, int position) {
+            // Each cardView has these components and are being set by the current coralEntry
             CoralEntry coralEntry = entries.get(position);
             holder.coralEntry = coralEntry;
             holder.reefName.setText(coralEntry.getReefName());
@@ -300,6 +343,9 @@ public class CoralDatabaseFragment extends Fragment {
             return entries.size();
         }
 
+        /**
+         * This ViewHolder makes up each CardView shown on screen
+         */
         static class CoralEntryViewHolder extends RecyclerView.ViewHolder {
             TextView reefName;
             TextView coralName;
@@ -328,7 +374,6 @@ public class CoralDatabaseFragment extends Fragment {
 
         public interface CListener {
             void goToViewDataFragment(CoralEntry entry);
-            void goBackToHomeFragment();
         }
     }
 }

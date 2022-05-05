@@ -41,14 +41,24 @@ public class MainActivity extends AppCompatActivity implements SignInFragment.SL
 
     }
 
+    /**
+     * Updates the title on the support bar
+     * @param title
+     */
     public void setSupportTitle(String title) {
         getSupportActionBar().setTitle(title);
     }
 
+    /**
+     * Hides the support bar
+     */
     public void hideSupportActionBar() {
         getSupportActionBar().hide();
     }
 
+    /**
+     * Shows the support bar
+     */
     public void showSupportActionBar() {
         getSupportActionBar().show();
     }
@@ -60,14 +70,6 @@ public class MainActivity extends AppCompatActivity implements SignInFragment.SL
                 .addToBackStack(null)
                 .commit();
     }
-
-//    @Override
-//    public void goToSupportFragment() {
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.container, new SupportFragment(), "forgot")
-//                .addToBackStack(null)
-//                .commit();
-//    }
 
     @Override
     public void goToHomeFragmentFromSignIn() {
@@ -140,15 +142,16 @@ public class MainActivity extends AppCompatActivity implements SignInFragment.SL
     }
 
     @Override
-    public void goBackToHomeFragment() {
-        getSupportFragmentManager().popBackStack();
-    }
-
-    @Override
     public void onLocationChanged(@NonNull Location location) {
 
     }
 
+    /**
+     * This gets the users permission to grab their location
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {

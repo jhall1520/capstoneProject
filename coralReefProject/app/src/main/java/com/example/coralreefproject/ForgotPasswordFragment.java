@@ -37,20 +37,25 @@ public class ForgotPasswordFragment extends Fragment {
         EditText email = view.findViewById(R.id.editTextTextEmailAddress2);
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
+        // add a listener on the reset password button
         view.findViewById(R.id.buttonResetPassword).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String emailString = email.getText().toString();
 
+                // if the user did not enter anything, display a toast
                 if (emailString.equals("")) {
                     Toast.makeText(getActivity(), "Enter your email.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                    mAuth.sendPasswordResetEmail(emailString)
+
+                // send email to the user entered email
+                mAuth.sendPasswordResetEmail(emailString)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
+                                    // Give the user a message that the email was succesfully sent
                                     AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                                             .setTitle("Success")
                                             .setMessage("An email was sent to reset your password!")
@@ -61,6 +66,7 @@ public class ForgotPasswordFragment extends Fragment {
                                                 }
                                             }).show();
                                 } else {
+                                    // tell the user why a email was not sent
                                     String exception = task.getException().toString();
                                     Toast.makeText(getActivity(), exception.split(": ")[1], Toast.LENGTH_LONG).show();
                                 }

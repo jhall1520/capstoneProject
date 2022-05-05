@@ -78,60 +78,51 @@ public class ViewDataFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_view_data, container, false);
 
         images = new ArrayList<>();
+        // Sets up recyclerView and adapter to correctly show each image
         recyclerView = view.findViewById(R.id.recyclerViewViewData);
         adapter = new CoralEntryAdapter(images);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
+        // Initialize all textViews
+        TextView reefName = view.findViewById(R.id.textViewShowReef);
+        TextView coralName = view.findViewById(R.id.textViewShowCoral);
+        TextView date = view.findViewById(R.id.textViewDatee);
+        TextView coordinates = view.findViewById(R.id.textViewShowCoord);
+        TextView locationAccuracy = view.findViewById(R.id.textViewShowAccuracy);
+        TextView airTemp = view.findViewById(R.id.textViewShowTemp);
+        TextView cloudCoverage = view.findViewById(R.id.textViewShowCloud);
+        TextView humidity = view.findViewById(R.id.textViewShowHumid);
+        TextView windDirection = view.findViewById(R.id.textViewShowWindDir);
+        TextView windSpeed = view.findViewById(R.id.textViewShowWindSp);
+        TextView waterTemp = view.findViewById(R.id.textViewShowWaterTemp);
+        TextView salinity = view.findViewById(R.id.textViewShowSal);
+        TextView waterTurb = view.findViewById(R.id.textViewShowWaterTurb);
+        TextView waveHeight = view.findViewById(R.id.textViewShowHeight);
+        TextView user = view.findViewById(R.id.textViewUser);
+        TextView numCorals = view.findViewById(R.id.textViewShowNumCorals);
 
+        // Get the storage instance where images are kept
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
+        // if the current entry has images hat have been uploaded
         if (entry.getImages() != null) {
+            // iterate through each image
             for (int i = 0; i < entry.getImages().size(); i++) {
                 int count = i;
+                // Get the Reference of the image that is stored
                 StorageReference httpsReference = storage.getReferenceFromUrl(entry.getImages().get(i));
+                // grab that image from storage
                 httpsReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void onSuccess(Uri uri) {
+                        // update
                         images.add(uri);
                         if (count == entry.getImages().size() - 1) {
+                            // update recyclerView
                             adapter.notifyDataSetChanged();
-                            TextView reefName = view.findViewById(R.id.textViewShowReef);
-                            TextView coralName = view.findViewById(R.id.textViewShowCoral);
-                            TextView date = view.findViewById(R.id.textViewDatee);
-                            TextView coordinates = view.findViewById(R.id.textViewShowCoord);
-                            TextView locationAccuracy = view.findViewById(R.id.textViewShowAccuracy);
-                            TextView airTemp = view.findViewById(R.id.textViewShowTemp);
-                            TextView cloudCoverage = view.findViewById(R.id.textViewShowCloud);
-                            TextView humidity = view.findViewById(R.id.textViewShowHumid);
-                            TextView windDirection = view.findViewById(R.id.textViewShowWindDir);
-                            TextView windSpeed = view.findViewById(R.id.textViewShowWindSp);
-                            TextView waterTemp = view.findViewById(R.id.textViewShowWaterTemp);
-                            TextView salinity = view.findViewById(R.id.textViewShowSal);
-                            TextView waterTurb = view.findViewById(R.id.textViewShowWaterTurb);
-                            TextView waveHeight = view.findViewById(R.id.textViewShowHeight);
-                            TextView user = view.findViewById(R.id.textViewUser);
-                            TextView numCorals = view.findViewById(R.id.textViewShowNumCorals);
-
-                            reefName.setText(entry.getReefName());
-                            coralName.setText(entry.getCoralName());
-                            date.setText(entry.getDate() + " " + entry.getTime());
-                            String coordinatesString = entry.getLatitude() + " , " + entry.getLongitude();
-                            coordinates.setText(coordinatesString);
-                            locationAccuracy.setText(entry.getLocationAccuracy());
-                            airTemp.setText(entry.getAirTemp());
-                            cloudCoverage.setText(entry.getCloudCover());
-                            humidity.setText(entry.getHumidity());
-                            windDirection.setText(entry.getWindDirection());
-                            windSpeed.setText(entry.getWindSpeed());
-                            waterTemp.setText(entry.getWaterTemp());
-                            salinity.setText(entry.getSalinity());
-                            waterTurb.setText(entry.getWaterTurbidity());
-                            waveHeight.setText(entry.getWaveHeight());
-                            user.setText(entry.getUserName());
-                            numCorals.setText(entry.getNumCorals());
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -142,6 +133,25 @@ public class ViewDataFragment extends Fragment {
                 });
             }
         }
+        // update all textViews with the correct information
+        reefName.setText(entry.getReefName());
+        coralName.setText(entry.getCoralName());
+        date.setText(entry.getDate() + " " + entry.getTime());
+        String coordinatesString = entry.getLatitude() + " , " + entry.getLongitude();
+        coordinates.setText(coordinatesString);
+        locationAccuracy.setText(entry.getLocationAccuracy());
+        airTemp.setText(entry.getAirTemp());
+        cloudCoverage.setText(entry.getCloudCover());
+        humidity.setText(entry.getHumidity());
+        windDirection.setText(entry.getWindDirection());
+        windSpeed.setText(entry.getWindSpeed());
+        waterTemp.setText(entry.getWaterTemp());
+        salinity.setText(entry.getSalinity());
+        waterTurb.setText(entry.getWaterTurbidity());
+        waveHeight.setText(entry.getWaveHeight());
+        user.setText(entry.getUserName());
+        numCorals.setText(entry.getNumCorals());
+
 
         return view;
     }
@@ -192,6 +202,7 @@ public class ViewDataFragment extends Fragment {
                         imageView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                // Inflates Image to show a bigger size so it is easily seen by the user
                                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(itemView.getContext());
                                 View inflatedView = LayoutInflater.from(itemView.getContext()).inflate(R.layout.larger_image_layout, (ViewGroup) itemView, false);
                                 ImageView image = inflatedView.findViewById(R.id.imageViewLargeImage);

@@ -42,25 +42,30 @@ public class SignInFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_sign_in, container, false);
 
+        // initialize email and password editText views
         email = view.findViewById(R.id.editTextEmailAddress);
         password = view.findViewById(R.id.editTextPassword);
 
+        // listener on the logIn button
         view.findViewById(R.id.buttonLogIn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: need to check database to see if the credentials are correct
+                // get the email and password the user entered
                 String emailString = email.getText().toString();
                 String passwordString = password.getText().toString();
 
+                // if they did not enter an email, display a toast
                 if (emailString.equals("")) {
                     Toast.makeText(getActivity(), "Enter an email.", Toast.LENGTH_SHORT).show();
                     return;
+                    // if they did not enter a password, display a toast
                 } else if (passwordString.equals("")) {
                     Toast.makeText(getActivity(), "Enter a password.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
+                // Get Instance of Firebase's Authentication
                 mAuth = FirebaseAuth.getInstance();
+                // Check authentication
                 mAuth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
                         .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                             @Override
@@ -68,7 +73,9 @@ public class SignInFragment extends Fragment {
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
                                     FirebaseUser user = mAuth.getCurrentUser();
+                                    // if the user does not have a Display Name
                                     if (user.getDisplayName() == null) {
+                                        // Create a screen that makes the user enter they Name
                                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
                                         alertDialog.setTitle("Enter User Information");
                                         View inflatedView = LayoutInflater.from(getContext()).inflate(R.layout.user_info_layout, (ViewGroup) getView(), false);
@@ -88,11 +95,12 @@ public class SignInFragment extends Fragment {
                                             public void onClick(View v)
                                             {
                                                 String name = userName.getText().toString();
-
+                                                // if user did not enter anything
                                                 if (name.equals("")) {
                                                     Toast.makeText(v.getContext(), "Enter your name.", Toast.LENGTH_SHORT).show();
                                                     return;
                                                 }
+                                                // Update users name
                                                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                                         .setDisplayName(name)
                                                         .build();
@@ -102,6 +110,7 @@ public class SignInFragment extends Fragment {
                                             }
                                         });
                                     } else {
+                                        // Go to the HomeFragment when the user signs in
                                         sListener.goToHomeFragmentFromSignIn();
                                     }
                                 } else {
@@ -114,19 +123,13 @@ public class SignInFragment extends Fragment {
             }
         });
 
+        // if the forgot password button is pressed go to the forgot password fragment
         view.findViewById(R.id.buttonForgotPassword).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sListener.goToForgotPasswordFragment();
             }
         });
-
-//        view.findViewById(R.id.buttonSupport).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                sListener.goToSupportFragment();
-//            }
-//        });
 
         return view;
     }
@@ -159,9 +162,6 @@ public class SignInFragment extends Fragment {
 
     public interface SListener {
         void goToForgotPasswordFragment();
-
-//        void goToSupportFragment();
-
         void goToHomeFragmentFromSignIn();
     }
 }

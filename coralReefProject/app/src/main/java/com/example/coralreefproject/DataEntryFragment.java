@@ -111,8 +111,10 @@ public class DataEntryFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_data_entry, container, false);
 
+        // this client will make api calls
         client = new OkHttpClient();
         imagePathList = new ArrayList<>();
+
         // textView on the screen that will change when data is received
         TextView waterTemp = view.findViewById(R.id.textViewShowWaterTemperature);
         TextView airTemp = view.findViewById(R.id.textViewShowAirTemp);
@@ -130,29 +132,34 @@ public class DataEntryFragment extends Fragment {
         // Image Storage in Firebase
         storage = FirebaseStorage.getInstance(FirebaseApp.getInstance());
 
+        // gets current location of user and the confidence accuracy
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         float accuracy = location.getAccuracy();
 
-
+        // Build the api Call for the OpenWeather API
         Request request1 = new Request.Builder()
                 .url("https://api.openweathermap.org/data/2.5/weather?lat=" + latitude +
                         "&lon=" + longitude + "&units=imperial&appid=32ee5fcb98111e23101d37faee480ad4")
                 .build();
 
+        // Creates new CoralEntry
         CoralEntry coralEntry = new CoralEntry();
+        // Gives default value of 10
         coralEntry.setWaterTurbidity("10");
 
+        // calls the OpenWeather API asynchronously
         client.newCall(request1).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-
+                e.printStackTrace();
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
 
                 try {
+                    // Parses through the JSON
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     JSONArray weather = jsonObject.getJSONArray("weather");
                     JSONObject main = jsonObject.getJSONObject("main");
@@ -165,6 +172,7 @@ public class DataEntryFragment extends Fragment {
                     String cloudiness = cloud.getString("all");
                     String humid = main.getString("humidity");
 
+                    // Updates the TextViews on the MainThread (UiThread)
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -176,7 +184,6 @@ public class DataEntryFragment extends Fragment {
                             coralEntry.setHumidity(humid + "%");
                         }
                     });
-
 
                     // Grabbing date and time in the correct format for API request
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -277,7 +284,7 @@ public class DataEntryFragment extends Fragment {
                                     }
 
                                     if (getActivity() != null) {
-                                        // update textViews on the main thread
+                                        // update textViews on the main thread (UiThread)
                                         getActivity().runOnUiThread(new Runnable() {
                                             @SuppressLint("SetTextI18n")
                                             @Override
@@ -313,6 +320,7 @@ public class DataEntryFragment extends Fragment {
             }
         });
 
+        // Update water turbidity when user click on a new radio button
         RadioGroup radioGroup = view.findViewById(R.id.radioGroupWaterTurb);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @SuppressLint("NonConstantResourceId")
@@ -337,14 +345,18 @@ public class DataEntryFragment extends Fragment {
             }
         });
 
+        // handles the upload images button
         view.findViewById(R.id.buttonUploadImages).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // inflates a screen where a user can click to user camera or upload an image
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
                 alertDialog.setTitle("Would you like to take or upload pictures?");
                 View inflatedView = LayoutInflater.from(getContext()).inflate(R.layout.upload_image_layout, (ViewGroup) getView(), false);
 
                 alertDialog.setView(inflatedView);
+
+                // If the user has already uploaded images or taken pictures, then they can clear all images
                 if (imagePathList != null && !imagePathList.isEmpty()) {
                     alertDialog.setPositiveButton("Clear All Images", new DialogInterface.OnClickListener() {
                         @Override
@@ -365,6 +377,7 @@ public class DataEntryFragment extends Fragment {
                     }
                 });
 
+                // Opens the Camera
                 AlertDialog dialog = alertDialog.create();
                 inflatedView.findViewById(R.id.buttonUseCamera).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -375,6 +388,7 @@ public class DataEntryFragment extends Fragment {
                     }
                 });
 
+                // Opens the Gallery
                 inflatedView.findViewById(R.id.buttonUpload).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -389,10 +403,12 @@ public class DataEntryFragment extends Fragment {
             }
         });
 
+        // handles the add entry button
         view.findViewById(R.id.buttonAddEntrySubmit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                // checks to make sure that a reef name was selected
                 if (reefName.getSelectedItem() == null || reefName.getSelectedItem().toString().equals("")) {
                     AlertDialog dialog = new AlertDialog.Builder(getContext())
                             .setTitle("Error")
@@ -401,6 +417,8 @@ public class DataEntryFragment extends Fragment {
                             .show();
                     return;
                 }
+
+                // check to make sure that a coralName was selected
                 if (coralName.getSelectedItem() == null || coralName.getSelectedItem().equals("")) {
                     AlertDialog dialog = new AlertDialog.Builder(getContext())
                             .setTitle("Error")
@@ -410,15 +428,19 @@ public class DataEntryFragment extends Fragment {
                     return;
                 }
 
+                // if the current location is above land and not water set the waterTurbidity to N/A
                 if (coralEntry.getWaterTemp().equals("N/A")) {
                     coralEntry.setWaterTurbidity("N/A");
                 }
 
+                // update reefName and CoralName
                 coralEntry.setReefName(reefName.getSelectedItem().toString());
                 coralEntry.setCoralName(coralName.getSelectedItem().toString());
 
+                // get currently logged in user
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+                // get database instance
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
 
                 ArrayList<String> imagesUrl = new ArrayList<>();
@@ -439,7 +461,9 @@ public class DataEntryFragment extends Fragment {
                                     public void onSuccess(Uri uri) {
                                         imagesUrl.add(uri.toString());
 
+                                        // if this was the last image to get uploaded
                                         if (count == imagePathList.size() - 1) {
+                                            // enter all data into the database
                                             coralEntry.setImages(imagesUrl);
                                             Map<String, Object> data = new HashMap<>();
                                             assert user != null;
@@ -464,6 +488,7 @@ public class DataEntryFragment extends Fragment {
                                             data.put("time", coralEntry.getTime());
                                             data.put("numCorals", coralEntry.getNumCorals());
 
+                                            // add entry into the database
                                             db.collection("entries")
                                                     .add(data).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                                 @Override
@@ -482,7 +507,9 @@ public class DataEntryFragment extends Fragment {
                             }
                         });
                     }
+                    // if there wasnt any images taken or uploaded
                 } else {
+                    // get all data from the entry
                     Map<String, Object> data = new HashMap<>();
                     data.put("userName", user.getDisplayName());
                     data.put("userId", user.getUid());
@@ -505,6 +532,7 @@ public class DataEntryFragment extends Fragment {
                     data.put("time", coralEntry.getTime());
                     data.put("numCorals", coralEntry.getNumCorals());
 
+                    // put the entry into the database
                     db.collection("entries")
                             .add(data).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                         @Override
@@ -513,6 +541,7 @@ public class DataEntryFragment extends Fragment {
                         }
                     });
                 }
+                // go back to the Home Fragment
                 dListener.goBackToHomeFragmentFromDataEntry();
             }
         });
@@ -524,6 +553,7 @@ public class DataEntryFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Sets up the Action Bar at the top of the screen
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#0328F3"));
         ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((MainActivity) getActivity()).getSupportActionBar().setBackgroundDrawable(colorDrawable);
@@ -539,7 +569,9 @@ public class DataEntryFragment extends Fragment {
         if (requestCode == 2 && resultCode == Activity.RESULT_OK && data != null) {
 
             if (data.getClipData() != null) {
+                // gets total count of images
                 int count = data.getClipData().getItemCount();
+                // iterates over all images and adds them into the list
                 for (int i = 0; i < count; i++) {
                     Uri imageUri = data.getClipData().getItemAt(i).getUri();
                     imagePathList.add(imageUri);
@@ -550,6 +582,7 @@ public class DataEntryFragment extends Fragment {
                         .setPositiveButton("OK", null)
                         .show();
             } else if (data.getData() != null) {
+                // if only one image was uploaded then add it to the list
                 Uri imgUri = data.getData();
                 imagePathList.add(imgUri);
                 AlertDialog dialog = new AlertDialog.Builder(getContext())
@@ -564,11 +597,15 @@ public class DataEntryFragment extends Fragment {
         if (requestCode == 10 && resultCode == Activity.RESULT_OK && data != null) {
 
             if (data.getExtras() != null) {
+                // Get the image
                 Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                // compress the image, so it can be stored as a URI
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 0, bytes);
+                // Insert Image
                 String path = MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), bitmap,
                         null, null);
+                // Add image to the list
                 imagePathList.add(Uri.parse(path));
                 AlertDialog dialog = new AlertDialog.Builder(getContext())
                         .setTitle("Success")
@@ -598,6 +635,11 @@ public class DataEntryFragment extends Fragment {
         }
     }
 
+    /**
+     * Get Direction of Latitude (N, S)
+     * @param lat
+     * @return
+     */
     public String getDirectionOfLatitude(double lat) {
         String latitude = String.format("%.2f", lat);
         if (latitude.contains("-")) {
@@ -609,6 +651,11 @@ public class DataEntryFragment extends Fragment {
         return latitude;
     }
 
+    /**
+     * Gets the direction for longitude (E, W)
+     * @param longit
+     * @return
+     */
     public String getDirectionOfLongitude(double longit) {
         String longitude = String.format("%.2f", longit);
         if (longitude.contains("-")) {
@@ -619,30 +666,6 @@ public class DataEntryFragment extends Fragment {
         }
         return longitude;
     }
-
-//    public String convertDegreeToDirection(String degree) {
-//        int degrees = Integer.parseInt(degree);
-//        String direction = null;
-//
-//        if (degrees >= 330 || degrees < 30) {
-//            direction = "N";
-//        } else if (30 <= degrees && degrees < 60) {
-//            direction = "NE";
-//        } else if (60 <= degrees && degrees < 120) {
-//            direction = "E";
-//        } else if (120 <= degrees && degrees < 150) {
-//            direction = "SE";
-//        } else if (150 <= degrees && degrees < 210) {
-//            direction = "S";
-//        } else if (210 <= degrees && degrees < 240) {
-//            direction = "SW";
-//        } else if (240 <= degrees && degrees < 300) {
-//            direction = "W";
-//        } else if (300 <= degrees && degrees < 330) {
-//            direction = "NW";
-//        }
-//        return direction;
-//    }
 
     public interface DListener {
         void goBackToHomeFragmentFromDataEntry();
