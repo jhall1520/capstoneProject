@@ -409,9 +409,9 @@ public class DataAnalysisFragment extends Fragment {
                         // add cloud coverage series to the seriesMap
                         seriesMap.put(reefName, seriesCloudCoverage);
                         // set Y bounds
-                        humidityLineChart.getViewport().setYAxisBoundsManual(true);
-                        humidityLineChart.getViewport().setMinY(0);
-                        humidityLineChart.getViewport().setMaxY(100);
+                        cloudCoverageLineChart.getViewport().setYAxisBoundsManual(true);
+                        cloudCoverageLineChart.getViewport().setMinY(0);
+                        cloudCoverageLineChart.getViewport().setMaxY(100);
 
                         // get Min and Max date to set X bounds
                         if (entries.size() > 0) {
@@ -495,7 +495,7 @@ public class DataAnalysisFragment extends Fragment {
                             waterTempLineChart.getGridLabelRenderer().setVerticalAxisTitle("Num Corals");
                             waterTempLineChart.getGridLabelRenderer().setLabelHorizontalHeight(140);
                             waterTempLineChart.getGridLabelRenderer().setHorizontalLabelsAngle(35);
-                            waterTempLineChart.getLegendRenderer().setFixedPosition(12, 360);
+                            waterTempLineChart.getLegendRenderer().setFixedPosition(12, 500);
 
                             // add airTemp series to airTemp chart
                             airTempLineChart.addSeries(seriesAirTemp);
@@ -518,7 +518,7 @@ public class DataAnalysisFragment extends Fragment {
                             airTempLineChart.getGridLabelRenderer().setVerticalAxisTitle("Degrees Fahrenheit");
                             airTempLineChart.getGridLabelRenderer().setLabelHorizontalHeight(140);
                             airTempLineChart.getGridLabelRenderer().setHorizontalLabelsAngle(35);
-                            airTempLineChart.getLegendRenderer().setFixedPosition(12, 580);
+                            airTempLineChart.getLegendRenderer().setFixedPosition(12, 500);
 
                             // add humidity series to the humidity chart
                             humidityLineChart.addSeries(seriesHumidity);
@@ -538,10 +538,10 @@ public class DataAnalysisFragment extends Fragment {
                             humidityLineChart.getLegendRenderer().setVisible(true);
                             humidityLineChart.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
                             humidityLineChart.getGridLabelRenderer().setHorizontalAxisTitle("Dates");
-                            humidityLineChart.getGridLabelRenderer().setVerticalAxisTitle("Degrees Fahrenheit");
+                            humidityLineChart.getGridLabelRenderer().setVerticalAxisTitle("Percentage");
                             humidityLineChart.getGridLabelRenderer().setLabelHorizontalHeight(140);
                             humidityLineChart.getGridLabelRenderer().setHorizontalLabelsAngle(35);
-                            humidityLineChart.getLegendRenderer().setFixedPosition(12, 580);
+                            humidityLineChart.getLegendRenderer().setFixedPosition(12, 560);
 
 
                             // add cloud coverage series to the cloud coverage chart
@@ -562,10 +562,9 @@ public class DataAnalysisFragment extends Fragment {
                             cloudCoverageLineChart.getLegendRenderer().setVisible(true);
                             cloudCoverageLineChart.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
                             cloudCoverageLineChart.getGridLabelRenderer().setHorizontalAxisTitle("Dates");
-                            cloudCoverageLineChart.getGridLabelRenderer().setVerticalAxisTitle("Degrees Fahrenheit");
+                            cloudCoverageLineChart.getGridLabelRenderer().setVerticalAxisTitle("Percentage");
                             cloudCoverageLineChart.getGridLabelRenderer().setLabelHorizontalHeight(140);
                             cloudCoverageLineChart.getGridLabelRenderer().setHorizontalLabelsAngle(35);
-                            cloudCoverageLineChart.getLegendRenderer().setFixedPosition(12, 580);
                         }
                     }
                 }
