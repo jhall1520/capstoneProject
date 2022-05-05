@@ -22,6 +22,7 @@
             android:layout_marginStart="80dp"
             android:layout_marginTop="16dp"
             android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/textViewReefNam"
             app:layout_constraintTop_toBottomOf="@+id/textView39" />
 
@@ -32,6 +33,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/coordinates"
             android:textColor="@color/black"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewNumCorals" />
@@ -42,6 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/textViewShowReef"
             app:layout_constraintTop_toBottomOf="@+id/textViewShowReef" />
 
@@ -52,6 +55,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/coralName"
             android:textColor="@color/black"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewReefNam" />
@@ -63,6 +67,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/reefName"
             android:textColor="@color/black"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView39" />
@@ -73,6 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/textViewShowNumCorals"
             app:layout_constraintTop_toBottomOf="@+id/textViewShowNumCorals" />
 
@@ -83,6 +89,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/locationAccuracy"
             android:textColor="@color/black"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewCoord" />
@@ -93,6 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/textViewShowCoord"
             app:layout_constraintTop_toBottomOf="@+id/textViewShowCoord" />
 
@@ -103,6 +111,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/date"
             android:textColor="@color/black"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewEnter" />
@@ -113,6 +122,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/textViewUser"
             app:layout_constraintTop_toBottomOf="@+id/textViewUser" />
 
@@ -123,6 +133,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/airTemp"
             android:textColor="@color/black"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewWeather" />
@@ -134,6 +145,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/waterTemp"
             android:textColor="@color/black"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewOceanData" />
@@ -144,6 +156,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/textViewShowWindDir"
             app:layout_constraintTop_toBottomOf="@+id/textViewOceanData" />
 
@@ -153,6 +166,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/textViewShowAccuracy"
             app:layout_constraintTop_toBottomOf="@+id/textViewWeather" />
 
@@ -162,6 +176,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/textViewShowWaterTemp"
             app:layout_constraintTop_toBottomOf="@+id/textViewShowWaterTemp" />
 
@@ -172,6 +187,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/waterTubidity"
             android:textColor="@color/black"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewSal" />
@@ -183,6 +199,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/salinity"
             android:textColor="@color/black"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewWater" />
@@ -193,6 +210,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/textViewShowSal"
             app:layout_constraintTop_toBottomOf="@+id/textViewShowSal" />
 
@@ -202,6 +220,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/textViewShowWaterTurb"
             app:layout_constraintTop_toBottomOf="@+id/textViewShowWaterTurb" />
 
@@ -212,6 +231,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/waveHeight"
             android:textColor="@color/black"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewTurb" />
@@ -223,6 +243,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/cloudCov"
             android:textColor="@color/black"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewAir" />
@@ -233,6 +254,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/textViewShowTemp"
             app:layout_constraintTop_toBottomOf="@+id/textViewShowTemp" />
 
@@ -243,6 +265,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/humidity"
             android:textColor="@color/black"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewCloud" />
@@ -253,6 +276,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/textViewShowCloud"
             app:layout_constraintTop_toBottomOf="@+id/textViewShowCloud" />
 
@@ -263,6 +287,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/numCorals"
             android:textColor="@color/black"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewCoralNam" />
@@ -273,6 +298,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/textViewShowCoral"
             app:layout_constraintTop_toBottomOf="@+id/textViewShowCoral" />
 
@@ -283,6 +309,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/windSpeed"
             android:textColor="@color/black"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewHumid" />
@@ -294,6 +321,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/windDirection"
             android:textColor="@color/black"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewWindSp" />
@@ -304,6 +332,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/textViewShowHumid"
             app:layout_constraintTop_toBottomOf="@+id/textViewShowHumid" />
 
@@ -313,6 +342,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/textViewShowWindSp"
             app:layout_constraintTop_toBottomOf="@+id/textViewShowWindSp" />
 
@@ -323,7 +353,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/weatherData"
             android:textColor="@color/blue"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewDat" />
@@ -335,7 +365,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/oceanData"
             android:textColor="@color/blue"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewWindDir" />
@@ -347,7 +377,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/images"
             android:textColor="@color/blue"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewWave" />
@@ -369,6 +399,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/enteredBy"
             android:textColor="@color/black"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewLocationAccuracy" />
@@ -379,6 +410,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/textViewShowAccuracy"
             app:layout_constraintTop_toBottomOf="@+id/textViewShowAccuracy" />
 
@@ -388,7 +420,7 @@
             android:layout_height="wrap_content"
             android:text="@string/details"
             android:textColor="@color/blue"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
