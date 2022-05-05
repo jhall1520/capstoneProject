@@ -192,14 +192,16 @@ public class DataEntryFragment extends Fragment {
                     // For testing over water:
                     // lat = 25.2175
                     // lon = -80.214722
-                    String url = "https://api.meteomatics.com/" +
-                            validTime + "/" + params + "/" + latitude + "," + longitude + "/json";
+                    // grabs current location
+//                    String url = "https://api.meteomatics.com/" +
+//                            validTime + "/" + params + "/" + latitude + "," + longitude + "/json";
+                    String url = "https://api.meteomatics.com/" + validTime + "/" + params + "/25.2175,-80.214722/json";
                     // encodes username and password for authentication
                     Base64.Encoder encoder = Base64.getEncoder();
                     // creates a request to API
                     Request request = new Request.Builder()
                             .url(url)
-                            .addHeader("Authorization", "Basic " + encoder.encodeToString("unccharlotte_hall:74DJtUYg4b".getBytes()))
+                            .addHeader("Authorization", "Basic " + encoder.encodeToString("uncc_hall:T4oBK3gq90".getBytes()))
                             .build();
                     // call the request and puts the work in a new thread
                     client.newCall(request).enqueue(new Callback() {

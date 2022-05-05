@@ -91,6 +91,11 @@
     <string name="elkhorn">Elkhorn</string>
     <string name="selectAll">Select All</string>
     <string name="numCoralss">Number Of Corals</string>
+    <string name="waterTempe">Water Temperature</string>
+    <string name="airTempe">Air Temperature</string>
+    <string name="salini">Salinity</string>
+    <string name="cloudCove">Cloud Coverage</string>
+    <string name="humidi">Humidity</string>
     <string-array name="reefNames">
         <item></item>
         <item>CarysFort Reef</item>

@@ -179,7 +179,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginEnd="20dp"
         android:gravity="center"
         android:text="@string/airTemperature"
         android:textColor="@color/black"
@@ -195,7 +195,7 @@
         android:layout_marginTop="38dp"
         android:layout_marginEnd="24dp"
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinnerCoralNames" />
 
@@ -250,7 +250,7 @@
         android:layout_marginTop="35dp"
         android:layout_marginEnd="24dp"
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewAirTemp" />
 
@@ -274,7 +274,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="10dp"
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@+id/textViewCoordinates"
         app:layout_constraintTop_toBottomOf="@+id/radioGroupWaterTurb" />
 
@@ -285,7 +285,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="38dp"
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@+id/textViewWaterTemp"
         app:layout_constraintTop_toBottomOf="@+id/spinnerCoralNames" />
 
@@ -295,7 +295,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/textViewShowWaterTemperature"
         app:layout_constraintTop_toBottomOf="@+id/textViewWaterTemp" />
 
@@ -320,7 +320,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/textViewShowSalinity"
         app:layout_constraintTop_toBottomOf="@+id/textViewShowSalinity" />
 
@@ -343,7 +343,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textViewHumidity" />
 
@@ -368,7 +368,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/textViewShowWaveHeight"
         app:layout_constraintTop_toTopOf="@+id/textViewWaveDirection" />
 
@@ -391,7 +391,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textViewWindSpeed" />
 
@@ -415,7 +415,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="32dp"
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroupWaterTurb" />
 
